@@ -1,0 +1,13 @@
+{
+  "name": "nestral",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nestral — an AI chief-of-staff for the solo operator running a portfolio of DTC brands. One brain across all your stores; one morning brief ranked by what needs you today.",
+  "bin": { "nestral": "index.js" },
+  "scripts": {
+    "brief": "node index.js brief",
+    "serve": "node index.js serve",
+    "start": "node index.js serve"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -1,0 +1,27 @@
+# ============================================================================
+#  SLO Agency OS — Python dependencies
+#  Deliberately minimal. The engine uses the official Google Places API + an
+#  optional Search API (both over plain `requests`), so only one package is needed.
+# ============================================================================
+
+requests==2.32.3
+
+# ---------------------------------------------------------------------------
+# Intentionally NOT included (and why):
+#
+#   playwright / playwright-stealth
+#       Would be used to headless-scrape Google Maps / Yelp. That violates their
+#       Terms of Service and relies on bot-evasion ("stealth"). find_leads.py does
+#       the "no website" + Stage 2/3 verification through the official Places API
+#       and an optional SerpAPI search instead — no browser, ToS-safe.
+#
+#   beautifulsoup4
+#       Not needed. The light HTML link check in find_leads.py uses the stdlib `re`.
+#
+#   google-generativeai (Gemini)
+#       Not needed. pitch_studio.py generates the call/SMS/email copy
+#       deterministically — no LLM API key required.
+#
+# Everything else the project uses (csv, json, os, re, html, base64, hashlib,
+# argparse, datetime) is in the Python standard library.
+# ---------------------------------------------------------------------------

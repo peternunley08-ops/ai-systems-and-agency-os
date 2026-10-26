@@ -1,0 +1,83 @@
+/* ============================================================
+   NESTRAL — design tokens (single source of truth)
+   "Dawn over the operations tower."
+   ============================================================ */
+:root {
+  /* — Ink (dark base) — */
+  --ink-900:#0B0E12;   /* page base */
+  --ink-850:#0E131A;
+  --ink-800:#11161D;   /* raised surface */
+  --ink-700:#161D26;   /* card */
+  --ink-600:#1C2530;   /* card hover */
+  --hair: rgba(255,255,255,.07);   /* hairline border */
+  --hair-2: rgba(255,255,255,.12);
+
+  /* — Dawn (primary accent) — */
+  --dawn-100:#FFE7C6;
+  --dawn-300:#FFD09A;
+  --dawn-400:#FFB55C;  /* primary */
+  --dawn-500:#FF9A3D;  /* mid */
+  --dawn-600:#F2792B;  /* deep */
+  --dawn-700:#D8631C;
+
+  /* — Paper (light surfaces) — */
+  --paper:#F4F1EA;     /* warm off-white (paired ONLY with grotesk, never serif body) */
+  --paper-2:#EAE5DA;
+
+  /* — Text — */
+  --tx:#ECEFF4;        /* primary */
+  --tx-dim:#9AA7B5;    /* secondary */
+  --tx-faint:#5E6B7A;  /* tertiary / captions */
+  --tx-ink:#0B0E12;    /* text on amber/paper */
+
+  /* — Signal (brief severities; functional, not decorative) — */
+  --sig-crit:#FF5D5D;
+  --sig-watch:#FFC24B;
+  --sig-good:#46D39A;
+
+  /* — Type — */
+  --f-display:"Instrument Serif", ui-serif, Georgia, serif;     /* editorial display ONLY */
+  --f-ui:"Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;/* everything UI/body */
+  --f-mono:"Spline Sans Mono", ui-monospace, "SFMono-Regular", monospace; /* data, eyebrows, code */
+
+  /* — Radius — */
+  --r-sm:8px; --r-md:14px; --r-lg:20px; --r-xl:28px; --r-pill:999px;
+
+  /* — Shadow / glow — */
+  --shadow-card:0 1px 0 rgba(255,255,255,.04) inset, 0 18px 40px -24px rgba(0,0,0,.8);
+  --glow-dawn:0 0 0 1px rgba(255,154,61,.25), 0 18px 60px -18px rgba(255,154,61,.35);
+
+  /* — Motion — */
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+/* ============================================================
+   LIGHT THEME — set [data-theme="light"] on <html>.
+   Nestral is dark-first but ships both for versatility.
+   Rule: serif (Instrument) stays DISPLAY-only; body is grotesk,
+   so warm paper never pairs with a serif body (the AI-slop tell).
+   ============================================================ */
+[data-theme="light"]{
+  --ink-900:#F5F1E8;   /* page base (warm paper) */
+  --ink-850:#FBF9F3;
+  --ink-800:#FFFFFF;   /* raised surface */
+  --ink-700:#FFFFFF;   /* card */
+  --ink-600:#FBF8F1;   /* card hover */
+  --hair: rgba(28,24,18,.10);
+  --hair-2: rgba(28,24,18,.20);
+  --dawn-400:#E2670F;  /* deepen accent for contrast on light */
+  --dawn-500:#F2792B;
+  --dawn-600:#C95A12;
+  --paper:#FFFFFF;
+  --tx:#1B1E23; --tx-dim:#56606C; --tx-faint:#8A93A0; --tx-ink:#FFF6EC;
+  --sig-crit:#D83A3F; --sig-watch:#B07400; --sig-good:#138A64;
+  --shadow-card:0 1px 0 rgba(255,255,255,.6) inset, 0 24px 50px -30px rgba(120,80,30,.4);
+}
+
+/* Dawn horizon glow — reusable atmospheric background */
+.dawn-bg {
+  background:
+    radial-gradient(120% 80% at 50% 120%, rgba(255,122,43,.18) 0%, rgba(255,122,43,0) 55%),
+    radial-gradient(90% 60% at 80% -10%, rgba(70,120,160,.10) 0%, rgba(0,0,0,0) 60%),
+    var(--ink-900);
+}

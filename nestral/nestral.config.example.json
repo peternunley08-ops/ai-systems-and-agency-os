@@ -1,0 +1,18 @@
+{
+  "_comment": "Copy this to nestral.config.json and edit. A 'workspace' is anything you connect (source: shopify | stripe). token:'mock' runs on safe sample data; a real token goes live. deliver.telegram needs a bot token (@BotFather) + your chat id. schedule.time is when `node index.js watch` sends the daily brief.",
+  "demo": true,
+  "schedule": { "time": "06:30" },
+  "deliver": {
+    "telegram": { "enabled": false, "botToken": "", "chatId": "" },
+    "webhook":  { "enabled": false, "url": "" },
+    "email":    { "enabled": false, "to": "peternunley08@gmail.com" }
+  },
+  "workspaces": [
+    { "source": "shopify", "label": "Cariven",        "domain": "cariven.myshopify.com",        "token": "mock" },
+    { "source": "shopify", "label": "Cinderlux",      "domain": "cinderlux.myshopify.com",      "token": "mock" },
+    { "source": "shopify", "label": "Lunthera",       "domain": "lunthera.myshopify.com",       "token": "mock" },
+    { "source": "shopify", "label": "Vertabliss",     "domain": "vertabliss.myshopify.com",     "token": "mock" },
+    { "source": "shopify", "label": "Northstar Paws", "domain": "northstar-paws.myshopify.com", "token": "mock" },
+    { "source": "stripe",  "label": "Payments (Stripe)", "token": "mock" }
+  ]
+}

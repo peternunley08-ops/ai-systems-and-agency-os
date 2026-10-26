@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaqueras | Food Truck in Santa Maria</title>
+<meta name="description" content="Vaqueras - Food Truck serving Santa Maria. Book the Truck.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FoodEstablishment",
+  "name": "Vaqueras",
+  "priceRange": "$$",
+  "areaServed": [
+    "Santa Maria",
+    "San Luis Obispo County",
+    "Paso Robles",
+    "Atascadero",
+    "San Luis Obispo",
+    "Morro Bay",
+    "Los Osos",
+    "Pismo Beach",
+    "Arroyo Grande",
+    "Nipomo",
+    "Templeton"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "908 N Broadway, Santa Maria, CA 93454",
+    "addressLocality": "Santa Maria",
+    "addressRegion": "CA",
+    "addressCountry": "US",
+    "postalCode": "93454"
+  },
+  "telephone": "805-406-4096",
+  "sameAs": [
+    "https://www.yelp.com/biz/vaqueras-santa-maria-2"
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.6",
+    "reviewCount": "72",
+    "bestRating": "5"
+  },
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "The Menu",
+        "description": "Every taco, plate, and special - see it before you arrive."
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Event Catering",
+        "description": "Weddings, parties, and corporate lunches, fully staffed."
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Find the Truck",
+        "description": "A live weekly schedule so regulars always track you down."
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Private Bookings",
+        "description": "Reserve the truck for your event in two taps."
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Order Ahead",
+        "description": "Skip the line with call-ahead pickup."
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Crowd Favorites",
+        "description": "The dishes people line up for, front and center."
+      }
+    }
+  ]
+}
+</script>
+<style>
+:root{
+  --bg:#f7f1e6;--surface:#fffaf2;--surface2:#f1e7d4;--ink:#241f18;
+  --muted:#7c6f59;--line:#e6d9c1;--c1:#c8761f;--c2:#7c3a14;--dark:#2a2118;
+  --at:#fff;--r:12px;--rl:26px;--bdw:1px;--sh:0 16px 40px rgba(64,38,8,.14);
+  --fd:"Playfair Display","DM Serif Display",Georgia,"Times New Roman",serif;--fb:Georgia,"Iowan Old Style","Palatino Linotype",serif;--fm:"Space Mono","DM Mono","SFMono-Regular",ui-monospace,"Courier New",monospace;
+  --pad:clamp(2rem,5vw,6rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--fd);line-height:1.08;letter-spacing:-.01em;font-weight:800}
+.mono{font-family:var(--fm);font-weight:400;letter-spacing:.02em}
+.st{color:var(--c1)}
+.demo-ribbon{position:fixed;top:15px;right:-46px;transform:rotate(45deg);background:var(--ink);
+  color:var(--bg);font-family:var(--fm);font-size:11px;letter-spacing:.14em;padding:6px 60px;z-index:120;box-shadow:var(--sh)}
+.btn,.z-link,.links a{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s,color .18s,background .18s}
+.mag{position:relative}
+.mag::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid transparent;transition:inset .2s ease,border-color .2s}
+.mag:hover::after{inset:-5px;border-color:color-mix(in srgb,var(--c1) 55%,transparent)}
+.btn:hover{transform:translateY(-2px)}
+.ico{display:inline-flex;transition:transform .2s}
+.btn:hover .ico,.z-link:hover svg{transform:translateX(3px)}
+.mag-card{transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,border-color .2s}
+.mag-card:hover{transform:translateY(-5px);box-shadow:var(--sh)}
+.btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;font-weight:700;
+  font-family:var(--fb);cursor:pointer;border:0;font-size:15px;padding:14px 24px}
+.btn-primary{background:var(--c1);color:var(--at);box-shadow:var(--sh)}
+.btn-nav{background:var(--ink);color:var(--bg);padding:11px 18px;font-size:14px}
+.btn-ghost{background:transparent;color:var(--ink);border:var(--bdw) solid var(--line)}
+header{position:fixed;top:0;left:0;right:0;z-index:100;transition:background .25s,box-shadow .25s,border-color .25s;border-bottom:1px solid transparent}
+header.scrolled{background:color-mix(in srgb,var(--surface) 72%,transparent);
+  backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:19px;font-family:var(--fd)}
+.mlogo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:var(--at);
+  font-family:var(--fd);font-size:17px;font-weight:800;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:var(--sh)}
+.links{display:flex;gap:26px;align-items:center}
+.links a{color:var(--muted);font-weight:600;font-size:15px;position:relative}
+.links a.txt::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;background:var(--c1);transition:right .25s}
+.links a.txt:hover{color:var(--ink)}.links a.txt:hover::after{right:0}
+.menu-btn{display:none;background:none;border:0;color:var(--ink);font-size:24px;cursor:pointer}
+.hero{padding-top:128px;padding-bottom:var(--pad);position:relative;overflow:hidden}
+.eyebrow{display:inline-block;font-family:var(--fm);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);background:var(--surface2);padding:7px 14px;border-radius:999px;margin-bottom:20px}
+.hero h1{font-size:clamp(36px,6.4vw,68px);max-width:16ch}
+.lede{font-size:clamp(17px,2.2vw,21px);color:var(--muted);max-width:54ch;margin:20px 0 28px}
+.lede.center{margin-left:auto;margin-right:auto}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}.cta-row.center{justify-content:center}
+.badge{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:var(--bdw) solid var(--line);
+  border-radius:999px;padding:9px 16px;font-weight:800;box-shadow:var(--sh);font-family:var(--fb)}
+.badge small{color:var(--muted);font-weight:600}
+.media{position:relative;border-radius:var(--rl);min-height:330px;display:grid;place-items:center;overflow:hidden;
+  background:linear-gradient(150deg,var(--c1),var(--c2));color:var(--at);box-shadow:var(--sh)}
+.media .mono-art{font-family:var(--fd);font-size:clamp(80px,16vw,150px);font-weight:800;opacity:.9;line-height:1}
+.media .media-tag{position:absolute;top:18px;left:18px;font-family:var(--fm);font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;background:rgba(0,0,0,.22);padding:6px 12px;border-radius:999px}
+.media .badge{position:absolute;bottom:-14px;right:22px;color:var(--ink)}
+.hero-a-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,56px);align-items:center}
+.arch-heavy .hero-b{background:var(--dark);color:#fff}
+.arch-heavy .hero-b .eyebrow{background:rgba(255,255,255,.1);color:#cfe0ff}
+.arch-heavy .hero-b .lede{color:rgba(255,255,255,.82)}
+.arch-heavy .hero-b .btn-ghost{color:#fff;border-color:rgba(255,255,255,.35)}
+.hero-b-inner{text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero-b .brutal{font-size:clamp(40px,8.5vw,92px);max-width:15ch}
+.arch-heavy .hero-b .brutal{text-transform:uppercase;letter-spacing:-.02em}
+.float-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px;width:100%}
+.fcell{display:flex;align-items:center;gap:12px;text-align:left;background:var(--surface);
+  border:var(--bdw) solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.arch-heavy .hero-b .fcell{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff}
+.fcell .fic{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;color:var(--at);background:var(--c1);flex:none}
+.fcell b{display:block;font-family:var(--fb);font-size:14px}.fcell span{font-size:13px;color:var(--muted)}
+.arch-heavy .hero-b .fcell span{color:rgba(255,255,255,.7)}
+.hero-c{padding-bottom:0}
+.hero-c-inner{max-width:60%;padding-bottom:var(--pad)}
+.fullbleed{background:var(--surface);border-top:var(--bdw) solid var(--line);border-bottom:var(--bdw) solid var(--line);padding:34px 0}
+.fb-grid{display:flex;gap:18px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.fb-item{display:flex;align-items:center;gap:11px;font-weight:700;font-family:var(--fb)}
+.fb-item .fb-ic{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;color:var(--c2);background:var(--surface2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;background:var(--surface);
+  border:var(--bdw) solid var(--line);border-radius:var(--rl);box-shadow:var(--sh);padding:24px;margin:-34px auto 0;position:relative;z-index:6}
+.stat{text-align:center}.stat b{display:block;font-family:var(--fd);font-size:24px}.stat .st{font-size:.8em}
+.stat span{font-size:12.5px;color:var(--muted);font-weight:600}
+section.block{padding:var(--pad) 0}
+.sec-head{max-width:60ch;margin:0 auto 46px;text-align:center}
+.kicker{font-family:var(--fm);color:var(--c1);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase}
+.sec-head h2{font-size:clamp(28px,4.4vw,44px);margin-top:10px}
+.sec-head p{color:var(--muted);font-size:17px;margin-top:12px}
+.soft{background:var(--surface)}
+.svc-ic{display:grid;place-items:center;width:54px;height:54px;border-radius:14px;color:var(--c2);background:var(--surface2);margin-bottom:15px}
+.bento h3,.b-card h3,.z-copy h3,.acc-head h3{font-size:20px;margin-bottom:6px}
+.bento p,.z-copy p{color:var(--muted);font-size:15px}
+.bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(150px,auto);gap:16px;grid-auto-flow:dense}
+.b-card{background:var(--bg);border:var(--bdw) solid var(--line);border-radius:var(--r);padding:24px}
+.b-card.b-flag{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,var(--c1),var(--c2));color:var(--at);display:flex;flex-direction:column;justify-content:flex-end}
+.b-card.b-flag .svc-ic{background:rgba(255,255,255,.2);color:var(--at)}
+.b-card.b-flag p{color:rgba(255,255,255,.86)}
+.b-card.b-wide{grid-column:span 2}
+.acc{border-top:var(--bdw) solid var(--line)}
+.acc-row{border-bottom:var(--bdw) solid var(--line);padding:22px 6px;cursor:pointer;outline:none}
+.acc-head{display:flex;align-items:center;gap:16px}
+.acc-no{color:var(--c1);font-size:14px}
+.acc-ic{display:grid;place-items:center;color:var(--c2);flex:none}
+.acc-head h3{flex:1}
+.acc-plus{color:var(--muted);transition:transform .3s}
+.acc-row:hover .acc-plus,.acc-row:focus-within .acc-plus{transform:rotate(90deg);color:var(--c1)}
+.acc-desc{max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s,margin .3s}
+.acc-row:hover .acc-desc,.acc-row:focus-within .acc-desc{max-height:140px;opacity:1;margin-top:12px}
+.acc-desc p{color:var(--muted);padding-left:48px;font-size:15.5px;max-width:70ch}
+.zwrap{display:flex;flex-direction:column;gap:clamp(24px,4vw,52px)}
+.z-row{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(20px,4vw,48px);align-items:center}
+.z-row.z-rev .z-media{order:2}
+.z-media{aspect-ratio:4/3;border-radius:var(--rl);display:grid;place-items:center;position:relative;
+  color:var(--at);background:linear-gradient(150deg,var(--c1),var(--c2));box-shadow:var(--sh)}
+.z-media svg{width:54px;height:54px;opacity:.95}
+.z-no{position:absolute;top:16px;left:18px;font-size:14px;opacity:.85}
+.z-link{display:inline-flex;align-items:center;gap:6px;margin-top:12px;color:var(--c1);font-weight:700}
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.rev{background:var(--bg);border:var(--bdw) solid var(--line);border-radius:var(--r);padding:26px}
+.rstars{color:var(--c1);letter-spacing:3px;margin-bottom:12px}
+.rev blockquote{font-size:15.5px}.rev figcaption{margin-top:15px;font-weight:700;font-size:13.5px;color:var(--muted)}
+.rev-note{text-align:center;color:var(--muted);font-size:13px;margin-top:22px;font-style:italic}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:start}
+.cinfo h2{font-size:clamp(28px,4.2vw,40px);margin-bottom:14px}.cinfo p{color:var(--muted);font-size:17px;margin-bottom:22px}
+.ci-row{display:flex;align-items:center;gap:13px;margin-bottom:14px;font-weight:600}
+.ci-ic{display:grid;place-items:center;width:42px;height:42px;border-radius:11px;color:var(--at);background:linear-gradient(135deg,var(--c1),var(--c2))}
+form{background:var(--surface);border:var(--bdw) solid var(--line);border-radius:var(--rl);padding:28px;box-shadow:var(--sh)}
+.field{margin-bottom:15px}label.fl{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+input,select,textarea{width:100%;padding:13px 15px;border:var(--bdw) solid var(--line);border-radius:var(--r);
+  font:inherit;font-size:15px;background:var(--bg);color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--c1)}
+textarea{min-height:100px;resize:vertical}
+.fmsg{display:none;background:color-mix(in srgb,var(--c2) 12%,var(--bg));border:1px solid var(--line);
+  padding:13px 15px;border-radius:var(--r);font-weight:600;margin-bottom:15px}
+footer{background:var(--dark);color:color-mix(in srgb,var(--at) 78%,var(--dark));padding:42px 0 96px}
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.foot .brand{color:var(--at)}.foot .mlogo{box-shadow:none}
+.convbar{position:fixed;left:0;right:0;bottom:0;z-index:110;display:none;align-items:center;justify-content:space-between;
+  gap:10px;padding:10px 16px;background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:var(--bdw) solid var(--line);box-shadow:0 -6px 20px rgba(0,0,0,.1)}
+.cv-hours{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--muted)}
+.cv-call{display:inline-flex;align-items:center;gap:8px;background:var(--c1);color:var(--at);font-weight:800;padding:11px 16px;border-radius:999px;font-size:14px;box-shadow:var(--sh)}
+@media(max-width:900px){
+  .links{display:none}.menu-btn{display:block}
+  .hero-a-grid{grid-template-columns:1fr}.hero-a .media{min-height:240px;order:-1}
+  .hero-c-inner{max-width:100%}
+  .float-grid{grid-template-columns:repeat(2,1fr)}
+  .bento{grid-template-columns:repeat(2,1fr)}.b-card.b-flag{grid-column:span 2;grid-row:span 1}.b-card.b-wide{grid-column:span 2}
+  .z-row,.z-row.z-rev .z-media{grid-template-columns:1fr;order:0}
+  .revs{grid-template-columns:1fr}.cgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}
+  .convbar{display:flex}
+}
+@media(max-width:520px){.float-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr;gap:12px}}
+</style>
+</head>
+<body class="arch-artisanal hero-A svc-accordion">
+<div class="demo-ribbon">PREVIEW</div>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a class="brand" href="#top"><span class="mlogo">VA</span>Vaqueras</a>
+    <nav class="links">
+      <a class="txt" href="#services">Services</a>
+      <a class="txt" href="#reviews">Reviews</a>
+      <a class="txt" href="#contact">Contact</a>
+      <a class="btn btn-nav mag" href="tel:8054064096">Call now &middot; 805-406-4096</a>
+    </nav>
+    <button class="lang" data-langbtn onclick="toggleLang()" style="background:var(--surface2);border:var(--bdw) solid var(--line);color:var(--ink);border-radius:999px;padding:8px 13px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--fb);margin-left:10px">ES</button>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.links').classList.toggle('open')">&#9776;</button>
+  </div>
+</header>
+
+<a id="top"></a>
+<section class="hero hero-a">
+  <div class="wrap hero-a-grid">
+    <div class="hero-copy">
+      <span class="eyebrow"><span class="mono">Food Truck</span> &middot; Santa Maria</span>
+      <h1>Street food worth chasing.</h1>
+      <p class="lede">Fresh, made-to-order favorites served hot from our truck — now bookable online for your next event.</p>
+      <div class="cta-row"><a class="btn btn-primary mag" href="tel:8054064096">Book the Truck &middot; 805-406-4096</a><a class="btn btn-ghost mag" href="#services">See services <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></div>
+    </div>
+    <div class="media"><span class="mono-art">VA</span><span class="media-tag">Food Truck</span><div class="badge"><span class="st">&#9733;</span> 4.6 <small>&middot; 72 reviews</small></div></div>
+  </div>
+</section>
+<div class="wrap"><div class="stats"><div class="stat"><b>4.6<i class="st">&#9733;</i></b><span>Avg rating</span></div><div class="stat"><b>72</b><span>Reviews</span></div><div class="stat"><b>Santa Maria</b><span>Serving</span></div><div class="stat"><b>Same-day</b><span>Quotes</span></div></div></div>
+
+<section id="services" class="block">
+  <div class="wrap">
+    <div class="sec-head"><span class="kicker">What we do</span>
+      <h2>Everything Santa Maria relies on us for</h2>
+      <p>Clear services, honest pricing, and a booking experience your customers will actually enjoy.</p>
+    </div>
+    <div class="acc"><div class="acc-row" tabindex="0"><div class="acc-head"><span class="acc-no mono">01</span><span class="acc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M4 3v7a2 2 0 0 0 2 2 2 2 0 0 0 2-2V3M6 12v9M16 3c-1.5 0-3 1.8-3 4.5S14.5 12 16 12v9"/></svg></span><h3>The Menu</h3><span class="acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><div class="acc-desc"><p>Every taco, plate, and special - see it before you arrive.</p></div></div><div class="acc-row" tabindex="0"><div class="acc-head"><span class="acc-no mono">02</span><span class="acc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span><h3>Event Catering</h3><span class="acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><div class="acc-desc"><p>Weddings, parties, and corporate lunches, fully staffed.</p></div></div><div class="acc-row" tabindex="0"><div class="acc-head"><span class="acc-no mono">03</span><span class="acc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M9 3L3 6v15l6-3 6 3 6-3V3l-6 3-6-3zM9 3v15M15 6v15"/></svg></span><h3>Find the Truck</h3><span class="acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><div class="acc-desc"><p>A live weekly schedule so regulars always track you down.</p></div></div><div class="acc-row" tabindex="0"><div class="acc-head"><span class="acc-no mono">04</span><span class="acc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7zM7 18a1.5 1.5 0 1 0 0 .01M18 18a1.5 1.5 0 1 0 0 .01"/></svg></span><h3>Private Bookings</h3><span class="acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><div class="acc-desc"><p>Reserve the truck for your event in two taps.</p></div></div><div class="acc-row" tabindex="0"><div class="acc-head"><span class="acc-no mono">05</span><span class="acc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><h3>Order Ahead</h3><span class="acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><div class="acc-desc"><p>Skip the line with call-ahead pickup.</p></div></div><div class="acc-row" tabindex="0"><div class="acc-head"><span class="acc-no mono">06</span><span class="acc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg></span><h3>Crowd Favorites</h3><span class="acc-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><div class="acc-desc"><p>The dishes people line up for, front and center.</p></div></div></div>
+  </div>
+</section>
+
+<section id="reviews" class="block soft">
+  <div class="wrap">
+    <div class="sec-head"><span class="kicker">What our customers say</span>
+      <h2>Loved by neighbors across Santa Maria</h2>
+      <p>Your reputation is your best marketing - we put it where everyone can see it.</p>
+    </div>
+    <div class="revs"><figure class="rev mag-card"><div class="rstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>&ldquo;Showed up exactly when they said, did beautiful work, and the price matched the quote. Couldn&#x27;t ask for more.&rdquo;</blockquote><figcaption>Best on the Central Coast &middot; Sample testimonial</figcaption></figure><figure class="rev mag-card"><div class="rstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>&ldquo;Friendly, professional, and clearly knows their craft. I&#x27;ve already recommended them to two neighbors.&rdquo;</blockquote><figcaption>Catered our wedding &middot; Sample testimonial</figcaption></figure><figure class="rev mag-card"><div class="rstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>&ldquo;Easy to book, great communication, and the results speak for themselves. This is who I&#x27;ll call from now on.&rdquo;</blockquote><figcaption>A weekly ritual &middot; Sample testimonial</figcaption></figure></div><p class="rev-note">Sample layout &mdash; once you approve, Vaqueras&rsquo;s real 5-star Google &amp; Yelp reviews drop straight into these cards.</p>
+  </div>
+</section>
+
+<section id="contact" class="block">
+  <div class="wrap cgrid">
+    <div class="cinfo">
+      <span class="kicker">Get in touch</span>
+      <h2>Ready when you are</h2>
+      <p>Send a request and Vaqueras will get right back to you. No phone tag, no hold music.</p>
+      <div class="ci-row"><span class="ci-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><span>Call or text for a fast quote</span></div>
+      <div class="ci-row"><span class="ci-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span>Serving Santa Maria &amp; the Central Coast</span></div>
+      <div class="ci-row"><span class="ci-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span>Santa Maria &middot; same-day estimates</span></div>
+    </div>
+    <form onsubmit="return hs(event)">
+      <div class="fmsg" id="fmsg">Thanks! This is a demo form - on your live site this lands straight in your inbox.</div>
+      <div class="field"><label class="fl">Your name</label><input required placeholder="Jane Doe"></div>
+      <div class="field"><label class="fl">Phone or email</label><input required placeholder="(805) 555-0123"></div>
+      <div class="field"><label class="fl">What do you need?</label>
+        <select><option>Request a quote</option><option>Book a service</option><option>Ask a question</option><option>Catering / event</option></select></div>
+      <div class="field"><label class="fl">Details</label><textarea placeholder="Tell us a little about the job..."></textarea></div>
+      <button class="btn btn-primary mag" type="submit" style="width:100%;justify-content:center">Book the Truck</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top"><span class="mlogo">VA</span>Vaqueras</a>
+    <div>&copy; 2026 Vaqueras &middot; Santa Maria, CA &middot; Website demo</div>
+  </div>
+</footer>
+
+<div class="convbar"><div class="cv-hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Wed-Sun 11a-8p</div><a class="cv-call" href="tel:8054064096"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> Call 805-406-4096</a></div>
+
+<script>
+(function(){
+  var h=document.getElementById('hdr');
+  function on(){ if(window.scrollY>24){h.classList.add('scrolled');}else{h.classList.remove('scrolled');} }
+  on(); window.addEventListener('scroll',on,{passive:true});
+})();
+function hs(e){
+  e.preventDefault();
+  var m=document.getElementById('fmsg'); m.style.display='block';
+  e.target.querySelectorAll('input,textarea').forEach(function(el){el.value='';});
+  m.scrollIntoView({behavior:'smooth',block:'center'}); return false;
+}
+var st=document.createElement('style');
+st.textContent='.links.open{display:flex;position:fixed;top:72px;left:0;right:0;flex-direction:column;background:var(--surface);padding:18px 22px;gap:16px;border-bottom:1px solid var(--line);box-shadow:var(--sh)}';
+document.head.appendChild(st);
+
+/* ---- bilingual EN/ES toggle (matches visible text by exact English string) ---- */
+const I18N_ES = {"Services": "Servicios", "Reviews": "Reseñas", "Contact": "Contacto", "See services": "Ver servicios", "Explore services": "Ver servicios", "Book now": "Reservar ahora", "Ask about this": "Pregunta por esto", "Avg rating": "Calificación", "Serving": "Atendemos", "Quotes": "Cotizaciones", "Same-day": "Mismo día", "Call / Text": "Llamar / Mensaje", "Hours": "Horario", "Service area": "Zona de servicio", "Reputation": "Reputación", "Tap to contact": "Toca para contactar", "Locally loved": "Muy querido localmente", "Book the Truck": "Reserva el Camión", "Book the Truck · 805-406-4096": "Reserva el Camión · 805-406-4096", "Call now": "Llamar ahora", "Call now · 805-406-4096": "Llamar ahora · 805-406-4096", "Contact us": "Contáctanos", "Call 805-406-4096": "Llamar 805-406-4096", "Street food worth chasing.": "Comida callejera que vale la pena perseguir.", "Fresh, made-to-order favorites served hot from our truck — now bookable online for your next event.": "Favoritos frescos, hechos al momento y servidos calientes desde nuestro camión — ahora reservables en línea para tu próximo evento.", "What we do": "Lo que hacemos", "Everything Santa Maria relies on us for": "Todo aquello en lo que Santa Maria confía en nosotros", "Clear services, honest pricing, and a booking experience your customers will actually enjoy.": "Servicios claros, precios honestos y una experiencia de reserva que tus clientes disfrutarán.", "The Menu": "El Menú", "Every taco, plate, and special - see it before you arrive.": "Cada taco, plato y especial: míralo antes de llegar.", "Event Catering": "Banquetes para Eventos", "Weddings, parties, and corporate lunches, fully staffed.": "Bodas, fiestas y almuerzos corporativos, con personal completo.", "Find the Truck": "Encuentra el Camión", "A live weekly schedule so regulars always track you down.": "Un horario semanal en vivo para que los clientes siempre te localicen.", "Private Bookings": "Reservas Privadas", "Reserve the truck for your event in two taps.": "Reserva el camión para tu evento en dos toques.", "Order Ahead": "Ordena con Anticipación", "Skip the line with call-ahead pickup.": "Evita la fila pidiendo para recoger.", "Crowd Favorites": "Favoritos del Público", "The dishes people line up for, front and center.": "Los platillos por los que la gente hace fila, al frente.", "What our customers say": "Lo que dicen nuestros clientes", "Loved by neighbors across Santa Maria": "Querido por los vecinos de Santa Maria", "Your reputation is your best marketing - we put it where everyone can see it.": "Tu reputación es tu mejor publicidad: la ponemos donde todos puedan verla.", "“Showed up exactly when they said, did beautiful work, and the price matched the quote. Couldn't ask for more.”": "“Llegaron justo cuando dijeron, hicieron un trabajo hermoso y el precio coincidió con la cotización. No se puede pedir más.”", "“Friendly, professional, and clearly knows their craft. I've already recommended them to two neighbors.”": "“Amables, profesionales y claramente dominan su oficio. Ya los recomendé a dos vecinos.”", "“Easy to book, great communication, and the results speak for themselves. This is who I'll call from now on.”": "“Fácil de reservar, excelente comunicación y los resultados hablan por sí solos. A ellos llamaré de ahora en adelante.”", "Best on the Central Coast · Sample testimonial": "Lo mejor de la Costa Central · Testimonio de muestra", "Catered our wedding · Sample testimonial": "Atendieron nuestra boda · Testimonio de muestra", "A weekly ritual · Sample testimonial": "Un ritual semanal · Testimonio de muestra", "Get in touch": "Ponte en contacto", "Ready when you are": "Listos cuando tú lo estés", "Send a request and Vaqueras will get right back to you. No phone tag, no hold music.": "Envía una solicitud y Vaqueras te responderá enseguida. Sin llamadas perdidas ni música de espera.", "Call or text for a fast quote": "Llama o envía un mensaje para una cotización rápida", "Serving Santa Maria & the Central Coast": "Atendemos Santa Maria y la Costa Central", "Santa Maria · same-day estimates": "Santa Maria · presupuestos el mismo día", "Your name": "Tu nombre", "Phone or email": "Teléfono o correo", "What do you need?": "¿Qué necesitas?", "Details": "Detalles", "Request a quote": "Solicitar cotización", "Book a service": "Reservar un servicio", "Ask a question": "Hacer una pregunta", "Catering / event": "Banquete / evento", "Jane Doe": "Juan Pérez", "Tell us a little about the job...": "Cuéntanos un poco sobre el trabajo..."};
+function _walk(node,fn){for(var n=node.firstChild;n;n=n.nextSibling){if(n.nodeType===3){fn(n);}else if(n.nodeType===1&&n.tagName!=='SCRIPT'&&n.tagName!=='STYLE'){_walk(n,fn);}}}
+function setLang(lang){
+  _walk(document.body,function(t){
+    if(lang==='es'){var k=t.nodeValue.trim();if(k&&I18N_ES[k]!=null){if(t.__en==null){t.__en=t.nodeValue;}t.nodeValue=t.nodeValue.replace(k,I18N_ES[k]);}}
+    else if(t.__en!=null){t.nodeValue=t.__en;}
+  });
+  document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(function(el){
+    if(lang==='es'){if(el.__ph==null){el.__ph=el.placeholder;}if(I18N_ES[el.placeholder]!=null){el.placeholder=I18N_ES[el.placeholder];}}
+    else if(el.__ph!=null){el.placeholder=el.__ph;}
+  });
+  document.documentElement.setAttribute('data-lang',lang);
+  document.querySelectorAll('[data-langbtn]').forEach(function(b){b.textContent=(lang==='es'?'EN':'ES');});
+}
+function toggleLang(){setLang(document.documentElement.getAttribute('data-lang')==='es'?'en':'es');}
+</script>
+</body>
+</html>

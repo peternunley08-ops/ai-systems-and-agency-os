@@ -1,0 +1,5 @@
+# real config holds Shopify Admin tokens — never commit
+nestral.config.json
+# generated briefs
+briefs/
+node_modules/

@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nestral — cockpit</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2311161D'/%3E%3Cpath d='M16 32c4 6 10.5 9.2 16 9.2S44 38 48 32' fill='none' stroke='%23FF9A3D' stroke-width='3.4' stroke-linecap='round'/%3E%3Cellipse cx='32' cy='29' rx='3.4' ry='4.2' fill='%23FFE7C6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root,[data-theme="dark"]{--bg:#0B0E12;--surface:#11161D;--card-a:#161D26;--card-b:#11161D;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.13);--tx:#ECEFF4;--dim:#9AA7B5;--faint:#62707F;--accent:#FFB55C;--accent2:#FF9A3D;--em:#FFD09A;--crit:#FF5D5D;--watch:#FFC24B;--good:#46D39A;--glow:rgba(255,122,43,.16);--glow2:rgba(70,120,160,.09);--grain-op:.03;--grain-blend:overlay}
+  [data-theme="light"]{--bg:#F5F1E8;--surface:#FFFFFF;--card-a:#FFFFFF;--card-b:#FBF8F1;--line:rgba(28,24,18,.10);--line2:rgba(28,24,18,.20);--tx:#1B1E23;--dim:#56606C;--faint:#8A93A0;--accent:#E2670F;--accent2:#F2792B;--em:#C2570A;--crit:#D83A3F;--watch:#B07400;--good:#138a64;--glow:rgba(255,150,70,.20);--glow2:rgba(120,160,200,.10);--grain-op:.05;--grain-blend:multiply}
+  :root{--f-display:"Instrument Serif",ui-serif,Georgia,serif;--f-ui:"Hanken Grotesk",ui-sans-serif,system-ui,sans-serif;--f-mono:"Spline Sans Mono",ui-monospace,monospace;--ease:cubic-bezier(.22,.61,.36,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--f-ui);color:var(--tx);background:var(--bg);-webkit-font-smoothing:antialiased;min-height:100vh;transition:background .4s var(--ease),color .4s var(--ease);background-image:radial-gradient(120% 80% at 50% 120%,var(--glow) 0%,transparent 52%),radial-gradient(80% 55% at 88% -8%,var(--glow2) 0%,transparent 60%);background-attachment:fixed}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:var(--grain-op);mix-blend-mode:var(--grain-blend);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{max-width:1100px;margin:0 auto;padding:30px 22px 64px;position:relative;z-index:1}
+  .mono{font-family:var(--f-mono)} a{color:var(--accent);text-decoration:none}
+  header{display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+  .logo{width:42px;height:42px;flex:none}
+  .brandname{font-weight:800;font-size:25px;letter-spacing:-.02em}
+  .sub{color:var(--dim);font-size:12.5px;font-family:var(--f-mono);margin-top:2px}
+  .right{margin-left:auto;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .iconbtn{height:34px;border-radius:99px;border:1px solid var(--line2);background:transparent;color:var(--tx);cursor:pointer;font-size:13px;font-family:var(--f-ui);padding:0 13px;display:inline-flex;align-items:center;gap:7px;transition:.2s}
+  .iconbtn:hover{background:color-mix(in srgb,var(--tx) 8%,transparent);border-color:var(--accent)}
+  .iconbtn.round{width:34px;padding:0;justify-content:center}
+  .badge{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1px solid var(--line2);color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent)}
+  .badge.live{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent);background:color-mix(in srgb,var(--good) 8%,transparent)}
+  .toprow{display:flex;gap:16px;align-items:flex-end;margin-bottom:22px;flex-wrap:wrap}
+  .lede{font-family:var(--f-display);font-size:30px;line-height:1.08;letter-spacing:-.01em;flex:1;min-width:240px}
+  .lede em{font-style:italic;color:var(--em)}
+  .spark{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--surface);min-width:190px;display:flex;flex-direction:column;gap:2px}
+  .spark .l{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+  .spark-row{display:flex;align-items:center;gap:10px}
+  .ask{display:flex;gap:9px;margin:0 0 10px}
+  .ask input{flex:1;background:var(--surface);border:1px solid var(--line2);border-radius:999px;padding:12px 18px;color:var(--tx);font-family:var(--f-ui);font-size:14.5px}
+  .ask input:focus{outline:none;border-color:var(--accent2)}
+  .ask button{border:none;border-radius:999px;padding:0 22px;background:linear-gradient(180deg,var(--accent),var(--accent2));color:#1a0f04;font-weight:700;cursor:pointer;font-family:var(--f-ui);transition:.15s}
+  .ask button:hover{filter:brightness(1.06)}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 22px;align-items:center}
+  .chips span{font-family:var(--f-mono);font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-right:2px}
+  .chip{background:var(--surface);border:1px solid var(--line2);color:var(--dim);border-radius:999px;padding:4px 11px;font-size:12px;font-family:var(--f-mono);cursor:pointer;transition:.18s}
+  .chip:hover{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+  .answer{background:color-mix(in srgb,var(--accent) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:12px;padding:13px 16px;margin:-8px 0 24px;font-size:14.5px;display:none;line-height:1.5}
+  .answer.show{display:block}
+  .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 28px}
+  @media(max-width:680px){.strip{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:linear-gradient(180deg,var(--card-a),var(--card-b));border:1px solid var(--line);border-radius:14px;padding:15px 17px}
+  .kpi .n{font-family:var(--f-mono);font-weight:600;font-size:24px;letter-spacing:-.01em}
+  .kpi .n small{font-size:13px;color:var(--faint);font-weight:500}
+  .kpi .l{color:var(--faint);font-size:11px;margin-top:4px;font-family:var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+  .section{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.16em;margin:0 0 13px;display:flex;justify-content:space-between;align-items:center}
+  .needs{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:4px 6px;margin-bottom:30px;overflow:hidden}
+  .row{display:flex;gap:13px;align-items:flex-start;padding:13px 16px;border-bottom:1px solid var(--line);transition:.2s var(--ease)}
+  .row:last-child{border-bottom:0} .row:hover{background:color-mix(in srgb,var(--tx) 3%,transparent)}
+  .dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none}
+  .dot.high{background:var(--crit);box-shadow:0 0 8px var(--crit)} .dot.med{background:var(--watch)} .dot.low{background:var(--good)}
+  .row .who{font-weight:700;margin-right:7px}
+  .row .body{font-size:14px;line-height:1.45}
+  .row .act{color:var(--accent);font-family:var(--f-mono);font-size:12px;display:block;margin-top:3px}
+  .clear{padding:20px 16px;color:var(--good);font-weight:600}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:14px}
+  .card{background:linear-gradient(180deg,var(--card-a),var(--card-b));border:1px solid var(--line);border-radius:16px;padding:17px;position:relative;overflow:hidden;transition:.3s var(--ease);cursor:pointer}
+  .card:hover{border-color:var(--line2);transform:translateY(-3px)}
+  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--good)}
+  .card.high::before{background:var(--crit)} .card.med::before{background:var(--watch)}
+  .card .name{font-weight:700;font-size:17px;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center}
+  .card .src{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);border-radius:99px;padding:2px 7px}
+  .card .head{color:var(--dim);font-size:13px;margin:7px 0 13px;min-height:34px;line-height:1.4}
+  .mini{display:flex;gap:18px;border-top:1px solid var(--line);padding-top:11px}
+  .mini div{font-size:11px;color:var(--faint);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.04em}
+  .mini b{display:block;font-family:var(--f-mono);font-size:16px;color:var(--tx);font-weight:600;margin-bottom:2px;text-transform:none;letter-spacing:0}
+  .foot{margin-top:34px;color:var(--faint);font-size:12px;font-family:var(--f-mono);text-align:center}
+  .err{background:color-mix(in srgb,var(--crit) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--crit) 40%,transparent);color:var(--crit);padding:16px;border-radius:14px}
+  /* drawer */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:.3s;z-index:60;backdrop-filter:blur(2px)}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);background:var(--bg);border-left:1px solid var(--line2);transform:translateX(100%);transition:.35s var(--ease);z-index:61;overflow-y:auto;box-shadow:-30px 0 80px -40px rgba(0,0,0,.8)}
+  .drawer.open{transform:none}
+  .drawer .dh{display:flex;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:2}
+  .drawer .dh h3{font-family:var(--f-display);font-size:24px;font-weight:400}
+  .drawer .x{margin-left:auto;background:none;border:none;color:var(--dim);font-size:22px;cursor:pointer}
+  .drawer .body{padding:20px 22px}
+  .dsec{margin-bottom:26px}
+  .dsec h4{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+  .wsrow{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--surface)}
+  .wsrow .wsd{font-family:var(--f-mono);font-size:10px;color:var(--faint)}
+  .wsrow .rm{margin-left:auto;background:none;border:none;color:var(--faint);cursor:pointer;font-size:16px}
+  .wsrow .rm:hover{color:var(--crit)}
+  label.f{display:block;font-size:12px;color:var(--dim);margin:10px 0 5px}
+  .in,select.in{width:100%;background:var(--surface);border:1px solid var(--line2);border-radius:9px;padding:9px 12px;color:var(--tx);font-family:var(--f-ui);font-size:14px}
+  .in:focus{outline:none;border-color:var(--accent2)}
+  .dbtn{width:100%;margin-top:12px;border:none;border-radius:9px;padding:11px;background:linear-gradient(180deg,var(--accent),var(--accent2));color:#1a0f04;font-weight:700;cursor:pointer;font-family:var(--f-ui)}
+  .dbtn.sec{background:transparent;border:1px solid var(--line2);color:var(--tx);margin-top:8px;font-weight:600}
+  .dbtn.sec:hover{border-color:var(--accent);color:var(--accent)}
+  .toggle{display:flex;align-items:center;gap:10px;font-size:14px;margin:8px 0}
+  .hint{font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.4}
+  .msg{font-family:var(--f-mono);font-size:12px;color:var(--good);margin-top:8px;min-height:16px}
+  /* brief modal */
+  .modal-wrap{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.25s}
+  .modal-wrap.open{opacity:1;pointer-events:auto}
+  .modal{background:var(--bg);border:1px solid var(--line2);border-radius:18px;width:min(720px,96vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 30px 90px rgba(0,0,0,.65);overflow:hidden}
+  .modal-hd{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line);background:var(--surface)}
+  .modal-hd h3{font-family:var(--f-display);font-size:23px;font-weight:400}
+  .modal-tabs{display:flex;gap:6px;margin-left:auto}
+  .mtab{background:transparent;border:1px solid var(--line2);color:var(--dim);border-radius:99px;padding:5px 12px;font-family:var(--f-mono);font-size:11px;cursor:pointer}
+  .mtab.active{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);border-color:var(--accent)}
+  .modal-bd{padding:20px 22px;overflow-y:auto;flex:1}
+  .tg-box{background:#0E1621;color:#F5F5F5;border-radius:14px;padding:16px 18px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;border:1px solid rgba(255,255,255,.08);max-width:540px;margin:0 auto}
+  .tg-hdr{display:flex;align-items:center;gap:9px;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .tg-ava{width:30px;height:30px;border-radius:50%;background:#1b2736;display:grid;place-items:center;font-size:15px}
+  .tg-name{font-weight:700;color:#64B5EF;font-size:13.5px}
+  .tg-bot{font-size:10px;background:rgba(100,181,239,.16);color:#64B5EF;padding:1px 6px;border-radius:4px;font-family:var(--f-mono)}
+  .tg-time{margin-left:auto;font-size:11px;color:#6C7883;font-family:var(--f-mono)}
+  .md-pre{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px;font-family:var(--f-mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;color:var(--tx)}
+  .modal-ft{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--surface)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD9A8"/><stop offset="1" stop-color="#FF9A3D"/></linearGradient></defs><path d="M7 35c6.5 10 16 14.5 25 14.5S50.5 45 57 35" fill="none" stroke="#D8631C" stroke-width="3.2" stroke-linecap="round"/><path d="M13 31c4.5 6.7 11.5 10 19 10s14.5-3.3 19-10" fill="none" stroke="#FF9A3D" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="24" cy="30" rx="3.6" ry="4.5" fill="url(#e)"/><ellipse cx="32" cy="28" rx="3.6" ry="4.5" fill="#FFE7C6"/><ellipse cx="40" cy="30" rx="3.6" ry="4.5" fill="url(#e)"/></svg>
+    <div><div class="brandname">Nestral</div><div class="sub" id="sub">loading…</div></div>
+    <div class="right">
+      <a class="iconbtn" href="../site/index.html" title="Marketing site">✦ Overview</a>
+      <button class="iconbtn" id="previewbtn">📨 Preview Brief</button>
+      <button class="iconbtn" id="connectbtn">⚙ Connect</button>
+      <button class="iconbtn round" id="themebtn" title="Toggle light / dark">☾</button>
+      <div class="badge" id="badge">—</div>
+    </div>
+  </header>
+
+  <div class="toprow">
+    <div class="lede" id="lede"></div>
+    <div class="spark"><div class="l">7-day revenue trend</div><div class="spark-row" id="spark"></div></div>
+  </div>
+
+  <div class="ask">
+    <input id="askin" placeholder="Ask your portfolio…  e.g. best week? · what needs me? · stock risks? · compare stores">
+    <button id="askbtn">Ask</button>
+  </div>
+  <div class="chips">
+    <span>Try:</span>
+    <button class="chip" data-q="what needs me today?">⚡ What needs me?</button>
+    <button class="chip" data-q="best week?">📈 Best week?</button>
+    <button class="chip" data-q="stock risks?">🪫 Stock risks?</button>
+    <button class="chip" data-q="open orders to fulfill?">📦 Open orders?</button>
+    <button class="chip" data-q="total revenue?">💰 Total revenue?</button>
+    <button class="chip" data-q="compare stores">🔍 Compare stores</button>
+  </div>
+  <div class="answer" id="answer"></div>
+
+  <div id="content"></div>
+  <div class="foot">Nestral cockpit · <span id="modeLabel">auto-refreshes every 60s</span> · <span id="ts"></span></div>
+</div>
+
+<!-- Connect / settings drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="dh"><h3>Connect</h3><button class="x" id="drawerx">✕</button></div>
+  <div class="body">
+    <div class="dsec">
+      <h4>Workspaces</h4>
+      <div id="wslist"></div>
+      <label class="f">Source</label>
+      <select class="in" id="wsSource"><option value="shopify">Shopify</option><option value="stripe">Stripe</option></select>
+      <label class="f">Name</label><input class="in" id="wsLabel" placeholder="My Store">
+      <label class="f">Domain <span style="color:var(--faint)">(Shopify only)</span></label><input class="in" id="wsDomain" placeholder="mystore.myshopify.com">
+      <label class="f">API token <span style="color:var(--faint)">(blank = demo data)</span></label><input class="in" id="wsToken" placeholder="shpat_… or leave blank">
+      <button class="dbtn" id="wsAdd">Add workspace</button>
+      <button class="dbtn sec" id="wsReset">Reset default demo portfolio (6 workspaces)</button>
+      <div class="hint">Shopify: custom-app Admin token (read_orders, read_products). Stripe: a read-only restricted key. Tokens stay on your machine.</div>
+    </div>
+    <div class="dsec">
+      <h4>Daily brief delivery</h4>
+      <div class="toggle"><input type="checkbox" id="tgEnable"> <span>Send to Telegram</span></div>
+      <label class="f">Bot token</label><input class="in" id="tgToken" placeholder="from @BotFather">
+      <label class="f">Chat ID</label><input class="in" id="tgChat" placeholder="your numeric chat id">
+      <label class="f">Send at (daily)</label><input class="in" id="schedTime" placeholder="06:30" style="max-width:120px">
+      <button class="dbtn" id="saveDeliver">Save delivery</button>
+      <div class="hint">Then run <span class="mono">node index.js watch</span> to send the brief automatically every day.</div>
+    </div>
+    <div class="msg" id="drawerMsg"></div>
+  </div>
+</aside>
+
+<!-- Morning Brief Preview Modal -->
+<div class="modal-wrap" id="briefModal">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-hd">
+      <h3>Morning Brief Delivery Preview</h3>
+      <div class="modal-tabs">
+        <button class="mtab active" id="tabTg">Telegram Push</button>
+        <button class="mtab" id="tabMd">Markdown (briefs/*.md)</button>
+      </div>
+      <button class="iconbtn round" id="modalClose" style="margin-left:8px">✕</button>
+    </div>
+    <div class="modal-bd" id="modalBody"></div>
+    <div class="modal-ft">
+      <span class="mono" style="font-size:11.5px;color:var(--faint)" id="modalSub">Scheduled daily at 06:30</span>
+      <button class="iconbtn" id="copyBriefBtn">📋 Copy Brief Markdown</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const money=(n,c='USD')=>{try{return new Intl.NumberFormat('en-US',{style:'currency',currency:c,maximumFractionDigits:0}).format(n||0)}catch{return '$'+Math.round(n||0)}};
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const $=id=>document.getElementById(id);
+
+/* ============================================================================
+   CLIENT-SIDE STANDALONE ENGINE (Mirrors src/shopify.js, src/brief.js, src/ask.js)
+   Used seamlessly when /api/* is unavailable (e.g., GitHub Pages static preview)
+   ============================================================================ */
+const STORAGE_KEY = 'nestral-config-v1';
+const DEFAULT_WORKSPACES = [
+  { source: 'shopify', label: 'Cariven',        domain: 'cariven.myshopify.com',        token: 'mock' },
+  { source: 'shopify', label: 'Cinderlux',      domain: 'cinderlux.myshopify.com',      token: 'mock' },
+  { source: 'shopify', label: 'Lunthera',       domain: 'lunthera.myshopify.com',       token: 'mock' },
+  { source: 'shopify', label: 'Vertabliss',     domain: 'vertabliss.myshopify.com',     token: 'mock' },
+  { source: 'shopify', label: 'Northstar Paws', domain: 'northstar-paws.myshopify.com', token: 'mock' },
+  { source: 'stripe',  label: 'Payments (Stripe)', domain: 'stripe',                  token: 'mock' }
+];
+
+function hashStr(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function trendPct(cur, prev) {
+  if (!prev) return cur ? 100 : 0;
+  return Math.round(((cur - prev) / prev) * 100);
+}
+
+function getLocalConfig() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed.workspaces) && parsed.workspaces.length) return parsed;
+    }
+  } catch {}
+  return {
+    demo: true,
+    schedule: { time: '06:30' },
+    deliver: { telegram: { enabled: true, chatId: '805914221', hasToken: true } },
+    workspaces: DEFAULT_WORKSPACES.map(w => ({ ...w }))
+  };
+}
+
+function saveLocalConfig(cfg) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch {}
+}
+
+function fetchMockWorkspace(ws) {
+  const src = (ws.source || 'shopify').toLowerCase();
+  const label = ws.label || ws.domain || 'Store';
+  if (src === 'stripe') {
+    const r = mulberry32(hashStr('stripe:' + label));
+    const aov = 30 + Math.floor(r() * 120);
+    const per = Math.floor(r() * 7);
+    const drop = r() < 0.3;
+    const m = {
+      currency: 'USD',
+      ordersToday: Math.round(per * (0.5 + r())),
+      revenueToday: 0,
+      orders7d: per * 7,
+      revenue7d: per * 7 * aov,
+      ordersPrev7d: Math.round(per * 7 * (drop ? 1.7 : 1)),
+      revenuePrev7d: 0,
+      orders30: per * 30,
+      revenue30: per * 30 * aov,
+      unfulfilled: 0,
+      pendingPayment: Math.floor(r() * 4),
+      outOfStock: 0,
+      lowStock: 0,
+      lastOrderAgeDays: per ? 0 : 5 + Math.floor(r() * 10),
+    };
+    m.revenueToday = m.ordersToday * aov;
+    m.revenuePrev7d = m.ordersPrev7d * aov;
+    return { label, source: 'stripe', domain: 'stripe', ok: true, mock: true, metrics: m };
+  }
+
+  const rnd = mulberry32(hashStr(label));
+  const tier = rnd();
+  const aov = 40 + Math.floor(rnd() * 160);
+  let perDay = Math.floor(rnd() * 9);
+  let archetype = 'healthy';
+  if (tier < 0.2) { perDay = 0; archetype = 'stalled'; }
+  else if (tier < 0.4) { archetype = 'dropping'; }
+  else if (tier < 0.55) { archetype = 'spiking'; }
+
+  const mk = n => Math.max(0, Math.round(n));
+  const orders7d = mk(perDay * 7 * (archetype === 'spiking' ? 1.8 : 1));
+  const ordersPrev7d = mk(perDay * 7 * (archetype === 'dropping' ? 1.7 : archetype === 'spiking' ? 0.7 : 1));
+  const ordersToday = archetype === 'stalled' ? 0 : mk(perDay * (0.5 + rnd()));
+  const m = {
+    currency: 'USD',
+    orders7d,
+    ordersPrev7d,
+    revenue7d: orders7d * aov,
+    revenuePrev7d: ordersPrev7d * aov,
+    orders30: mk(perDay * 30),
+    revenue30: mk(perDay * 30) * aov,
+    ordersToday,
+    revenueToday: ordersToday * aov,
+    unfulfilled: archetype === 'stalled' ? 0 : Math.floor(rnd() * 14),
+    pendingPayment: Math.floor(rnd() * 3),
+    outOfStock: rnd() < 0.4 ? 1 + Math.floor(rnd() * 3) : 0,
+    lowStock: rnd() < 0.5 ? 1 + Math.floor(rnd() * 4) : 0,
+    lastOrderAgeDays: archetype === 'stalled' ? 7 + Math.floor(rnd() * 20) : 0,
+  };
+  return { label, source: src, domain: ws.domain || 'demo.myshopify.com', ok: true, mock: true, metrics: m };
+}
+
+const SEV = { high: 3, med: 2, low: 1 };
+
+function analyzeStoreClient(snap) {
+  const items = [];
+  if (!snap.ok) {
+    items.push({ severity: 'high', text: `${snap.label}: ${snap.error || 'connection failed'}`, action: 'Reconnect the workspace token' });
+    return { label: snap.label, source: snap.source, ok: false, items, headline: snap.error || 'connection failed' };
+  }
+  const m = snap.metrics;
+  const cur = m.currency;
+  const add = (severity, text, action) => items.push({ severity, text, action });
+
+  const t = trendPct(m.revenue7d, m.revenuePrev7d);
+  if (m.revenuePrev7d > 0 && t <= -30) add('high', `Sales down ${Math.abs(t)}% wk/wk (${money(m.revenue7d, cur)} vs ${money(m.revenuePrev7d, cur)})`, 'Check ad spend / traffic for this brand');
+  else if (t >= 50 && m.revenue7d > 0) add('low', `Sales up ${t}% wk/wk — momentum`, 'Consider scaling the winning channel');
+
+  if (m.lastOrderAgeDays != null && m.lastOrderAgeDays >= 7) add('high', `No orders in ${m.lastOrderAgeDays} days`, 'Is the store live + are ads running?');
+
+  if (m.unfulfilled >= 10) add('high', `${m.unfulfilled} orders awaiting fulfillment`, 'Fulfill / push to supplier today');
+  else if (m.unfulfilled >= 3) add('med', `${m.unfulfilled} orders to fulfill`, 'Clear the fulfillment queue');
+
+  if (m.pendingPayment >= 1) add('med', `${m.pendingPayment} order(s) with pending payment`, 'Capture or cancel');
+
+  if (m.outOfStock >= 1) add('high', `${m.outOfStock} active variant(s) OUT of stock`, 'Reorder or pause ads to those products');
+  else if (m.lowStock >= 1) add('med', `${m.lowStock} variant(s) low on stock`, 'Plan a reorder');
+
+  items.sort((a, b) => SEV[b.severity] - SEV[a.severity]);
+  const headline = items[0]?.text || `Healthy — ${m.orders7d} orders / ${money(m.revenue7d, cur)} this week`;
+  return { label: snap.label, source: snap.source, ok: true, mock: snap.mock, metrics: m, items, headline };
+}
+
+function buildBriefClient() {
+  const cfg = getLocalConfig();
+  const snaps = (cfg.workspaces || []).map(fetchMockWorkspace);
+  const date = new Date().toISOString().slice(0, 10);
+  const stores = snaps.map(analyzeStoreClient);
+  const live = stores.filter(s => s.ok);
+  const cur = live[0]?.metrics?.currency || 'USD';
+  const totals = live.reduce((a, s) => {
+    a.ordersToday += s.metrics.ordersToday;
+    a.revenueToday += s.metrics.revenueToday;
+    a.orders7d += s.metrics.orders7d;
+    a.revenue7d += s.metrics.revenue7d;
+    a.unfulfilled += s.metrics.unfulfilled;
+    return a;
+  }, { ordersToday: 0, revenueToday: 0, orders7d: 0, revenue7d: 0, unfulfilled: 0, currency: cur });
+
+  const topActions = [];
+  for (const s of stores) for (const it of s.items) topActions.push({ store: s.label, ...it });
+  topActions.sort((a, b) => SEV[b.severity] - SEV[a.severity]);
+
+  return { date, totals, stores, topActions, anyMock: true, storeCount: stores.length };
+}
+
+function buildHistoryClient(brief) {
+  const base = brief.totals.revenue7d || 18400;
+  const factors = [0.84, 0.89, 0.86, 0.93, 0.91, 0.96, 1.0];
+  return factors.map((f, i) => ({
+    date: `d-${6 - i}`,
+    revenue7d: Math.round(base * f)
+  }));
+}
+
+function askClient(question, brief) {
+  const q = String(question || '').toLowerCase().trim();
+  const L = brief.stores.filter(s => s.ok);
+  const cur = brief.totals.currency;
+  const trend = s => trendPct(s.metrics?.revenue7d || 0, s.metrics?.revenuePrev7d || 0);
+
+  if (!q) return { answer: 'Ask me about your portfolio — e.g. "best week?", "what needs me?", "total revenue", "stock risks", or "compare stores".' };
+
+  const named = L.find(s => q.includes(s.label.toLowerCase()));
+  if (named) {
+    const m = named.metrics;
+    return { answer: `${named.label} (${named.source}): ${named.headline}. ${m.orders7d} orders / ${money(m.revenue7d, m.currency)} this week (${trend(named) >= 0 ? '+' : ''}${trend(named)}% wk/wk), ${m.unfulfilled} open, ${m.ordersToday} orders today (${money(m.revenueToday, m.currency)}).` };
+  }
+  if (/(compare|all stores|breakdown|rank|leaderboard)/.test(q)) {
+    const ranked = [...L].sort((a, b) => b.metrics.revenue7d - a.metrics.revenue7d);
+    return { answer: '7-day revenue leaderboard: ' + ranked.map((s, i) => `${i + 1}. ${s.label} (${money(s.metrics.revenue7d, cur)}, ${trend(s) >= 0 ? '+' : ''}${trend(s)}% wk/wk)`).join(' · ') };
+  }
+  if (/(best|top|winner|growing|up )/.test(q)) {
+    const w = [...L].sort((a, b) => trend(b) - trend(a))[0];
+    return { answer: w ? `Best momentum: ${w.label}, ${trend(w) >= 0 ? '+' : ''}${trend(w)}% wk/wk (${money(w.metrics.revenue7d, w.metrics.currency)} across ${w.metrics.orders7d} orders).` : 'No data.' };
+  }
+  if (/(worst|down|drop|losing|falling|struggl)/.test(q)) {
+    const w = [...L].sort((a, b) => trend(a) - trend(b))[0];
+    return { answer: w ? `Needs attention most: ${w.label}, ${trend(w)}% wk/wk — ${w.headline}.` : 'No data.' };
+  }
+  if (/(fulfil|ship|backlog|open order|to handle|orders)/.test(q)) {
+    const tops = [...L].filter(s => s.metrics.unfulfilled).sort((a, b) => b.metrics.unfulfilled - a.metrics.unfulfilled);
+    return { answer: `${brief.totals.unfulfilled} unfulfilled orders open across the portfolio (${brief.totals.ordersToday} new today, ${brief.totals.orders7d} over 7d).` + (tops.length ? ' Most backlog: ' + tops.slice(0, 3).map(s => `${s.label} (${s.metrics.unfulfilled})`).join(', ') + '.' : '') };
+  }
+  if (/(stock|inventory|out of)/.test(q)) {
+    const oos = L.filter(s => s.metrics.outOfStock || s.metrics.lowStock);
+    return { answer: oos.length ? 'Stock risk: ' + oos.map(s => `${s.label} (${s.metrics.outOfStock} out of stock, ${s.metrics.lowStock} low)`).join('; ') + '.' : 'No stock risks right now.' };
+  }
+  if (/(revenue|sales|money|making|total|how much)/.test(q)) {
+    return { answer: `Portfolio inflow: ${money(brief.totals.revenueToday, cur)} today (${brief.totals.ordersToday} orders) · ${money(brief.totals.revenue7d, cur)} over 7 days (${brief.totals.orders7d} orders) across ${brief.storeCount} workspaces.` };
+  }
+  if (/(need|urgent|today|do |priorit|focus)/.test(q)) {
+    const hi = brief.topActions.filter(a => a.severity === 'high').slice(0, 5);
+    return { answer: hi.length ? 'Needs you today: ' + hi.map(a => `${a.store} — ${a.text} (${a.action})`).join(' · ') : 'Nothing urgent today. ✅' };
+  }
+  if (/(quiet|silent|no sales|dead|live)/.test(q)) {
+    const dead = L.filter(s => s.metrics.lastOrderAgeDays >= 7);
+    return { answer: dead.length ? 'Gone quiet: ' + dead.map(s => `${s.label} (${s.metrics.lastOrderAgeDays}d since last order)`).join(', ') + '.' : 'Every workspace has recent activity.' };
+  }
+  const hi = brief.topActions.filter(a => a.severity === 'high').length;
+  return { answer: `${brief.storeCount} workspaces · ${money(brief.totals.revenue7d, cur)} this week · ${hi} high-priority items need you today. Try "best week?", "stock risks?", "compare stores", or click a workspace card.` };
+}
+
+function renderMarkdownClient(brief) {
+  const t = brief.totals, cur = t.currency;
+  const bar = sev => sev === 'high' ? '🔴' : sev === 'med' ? '🟡' : '🟢';
+  const L = [];
+  L.push(`# 🪺 Nestral — morning brief · ${brief.date}`);
+  if (brief.anyMock) L.push(`> ⚠️ Demo data (simulated multi-brand portfolio snapshot).`);
+  L.push('');
+  L.push(`**Portfolio today:** ${t.ordersToday} orders · ${money(t.revenueToday, cur)}  |  **7-day:** ${t.orders7d} orders · ${money(t.revenue7d, cur)}  |  **${t.unfulfilled}** open across ${brief.storeCount} workspaces`);
+  L.push('');
+  const high = brief.topActions.filter(a => a.severity === 'high');
+  L.push(`## ${high.length ? `⚡ Needs you today (${high.length})` : '✅ Nothing urgent today'}`);
+  for (const a of brief.topActions.slice(0, 8)) {
+    L.push(`- ${bar(a.severity)} **${a.store}** — ${a.text}  _→ ${a.action}_`);
+  }
+  L.push('');
+  L.push(`## Per workspace`);
+  for (const s of brief.stores) {
+    const tag = s.ok ? bar(s.items[0]?.severity || 'low') : '🔴';
+    L.push(`- ${tag} **${s.label}** (${s.source}) — ${s.headline}`);
+  }
+  return L.join('\n');
+}
+
+/* ============================================================================
+   UI CONTROLLER (Supports both Live Node Server & Browser Standalone Mode)
+   ============================================================================ */
+let currentBrief = null;
+let isStandalone = false;
+
+/* theme */
+(function(){
+  var s=localStorage.getItem('nestral-theme');
+  var t=s||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+  document.documentElement.setAttribute('data-theme',t);
+  window.addEventListener('DOMContentLoaded',function(){
+    var b=$('themebtn');
+    b.textContent=t==='light'?'☀':'☾';
+    b.onclick=function(){
+      t=t==='light'?'dark':'light';
+      document.documentElement.setAttribute('data-theme',t);
+      localStorage.setItem('nestral-theme',t);
+      b.textContent=t==='light'?'☀':'☾';
+    };
+  });
+})();
+
+function sparkline(pts){
+  if(!pts||pts.length<2) return `<div class="mono" style="color:var(--faint);font-size:12px;padding:4px 0">${pts&&pts.length?money(pts[0].revenue7d):'—'} · builds daily</div>`;
+  const vals=pts.map(p=>p.revenue7d), max=Math.max(...vals), min=Math.min(...vals), W=135,H=30,n=vals.length;
+  const x=i=>i*(W/(n-1)), y=v=>H-3-((v-min)/((max-min)||1))*(H-6);
+  const d=vals.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+  const last=vals[n-1],first=vals[0],up=last>=first;
+  return `<svg width="${W}" height="${H}"><path d="${d}" fill="none" stroke="${up?'var(--good)':'var(--crit)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(n-1)}" cy="${y(last)}" r="2.8" fill="${up?'var(--good)':'var(--crit)'}"/></svg><span class="mono" style="font-size:12px;color:${up?'var(--good)':'var(--crit)'}">${money(last)}</span>`;
+}
+
+async function fetchBriefAndHistory() {
+  if (location.protocol === 'file:') {
+    isStandalone = true;
+    const b = buildBriefClient();
+    return [b, buildHistoryClient(b)];
+  }
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 1800);
+    const r = await fetch('/api/brief', { signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const b = await r.json();
+    const hist = await fetch('/api/history').then(x => x.ok ? x.json() : []).catch(() => []);
+    isStandalone = false;
+    return [b, hist.length >= 2 ? hist : buildHistoryClient(b)];
+  } catch {
+    isStandalone = true;
+    const b = buildBriefClient();
+    return [b, buildHistoryClient(b)];
+  }
+}
+
+async function load(){
+  const el=$('content');
+  try{
+    const [b,hist]=await fetchBriefAndHistory();
+    currentBrief = b;
+    const t=b.totals,cur=t.currency;
+    $('sub').textContent=`morning brief · ${b.date} · ${b.storeCount} workspaces`;
+    const badge=$('badge');
+    badge.textContent=b.anyMock?(isStandalone?'interactive demo':'demo data'):'live';
+    badge.className='badge '+(b.anyMock?'':'live');
+    $('modeLabel').textContent = isStandalone ? 'client-side portfolio engine (zero-server demo)' : 'connected to local server · auto-refreshes every 60s';
+    const high=b.topActions.filter(a=>a.severity==='high');
+    $('lede').innerHTML=high.length?`<em>${high.length}</em> thing${high.length>1?'s':''} need you today.`:`Quiet morning. <em>Nothing urgent</em> across the portfolio.`;
+    $('spark').innerHTML=sparkline(hist);
+    const needs=b.topActions.length?b.topActions.slice(0,8).map(a=>`<div class="row"><span class="dot ${a.severity}"></span><div><span class="who">${esc(a.store)}</span><span class="body">${esc(a.text)}</span><span class="act">→ ${esc(a.action)}</span></div></div>`).join(''):`<div class="clear">✅ Everything's healthy. Go build the next thing.</div>`;
+    const cards=b.stores.map(s=>{
+      const sev=s.ok?(s.items[0]?.severity||'low'):'high';
+      const m=s.metrics||{};
+      const mini=s.ok?`<div class="mini"><div><b>${m.ordersToday||0}</b>today</div><div><b>${money(m.revenue7d,m.currency)}</b>7-day</div><div><b>${m.unfulfilled||0}</b>open</div></div>`:'';
+      return `<div class="card ${sev}" data-store="${esc(s.label)}" title="Click to ask about ${esc(s.label)}"><div class="name">${esc(s.label)}<span class="src">${esc(s.source||'')}</span></div><div class="head">${esc(s.headline)}</div>${mini}</div>`;
+    }).join('');
+    el.innerHTML=`<div class="strip"><div class="kpi"><div class="n">${t.ordersToday} <small>act</small></div><div class="l">Today</div></div><div class="kpi"><div class="n">${money(t.revenueToday,cur)}</div><div class="l">Inflow today</div></div><div class="kpi"><div class="n">${money(t.revenue7d,cur)}</div><div class="l">7-day inflow</div></div><div class="kpi"><div class="n">${t.unfulfilled} <small>open</small></div><div class="l">To handle</div></div></div><div class="section"><span>${high.length?('⚡ Needs you today · '+high.length+' urgent / '+b.topActions.length+' total'):'Today'}</span><span>Ranked by severity</span></div><div class="needs">${needs}</div><div class="section"><span>Per workspace (${b.storeCount})</span><span>Click any card to inspect</span></div><div class="grid">${cards}</div>`;
+    document.querySelectorAll('.card[data-store]').forEach(card => {
+      card.onclick = () => {
+        $('askin').value = card.getAttribute('data-store');
+        doAsk();
+      };
+    });
+    $('ts').textContent='updated '+new Date().toLocaleTimeString();
+  }catch(e){
+    el.innerHTML=`<div class="err">Couldn't load the brief: ${esc(e.message)}.</div>`;
+  }
+}
+
+/* ask */
+async function doAsk(){
+  const q=$('askin').value.trim();
+  if(!q)return;
+  const a=$('answer');
+  a.className='answer show';
+  a.textContent='…';
+  if (!isStandalone) {
+    try {
+      const r=await(await fetch('/api/ask?q='+encodeURIComponent(q))).json();
+      a.textContent=r.answer;
+      return;
+    } catch {}
+  }
+  const b = currentBrief || buildBriefClient();
+  a.textContent = askClient(q, b).answer;
+}
+$('askbtn').onclick=doAsk;
+$('askin').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
+document.querySelectorAll('.chip[data-q]').forEach(btn => {
+  btn.onclick = () => {
+    $('askin').value = btn.getAttribute('data-q');
+    doAsk();
+  };
+});
+
+/* drawer */
+function openDrawer(){$('scrim').classList.add('open');$('drawer').classList.add('open');loadConfigUI();}
+function closeDrawer(){$('scrim').classList.remove('open');$('drawer').classList.remove('open');}
+$('connectbtn').onclick=openDrawer;$('drawerx').onclick=closeDrawer;$('scrim').onclick=closeDrawer;
+
+async function loadConfigUI(){
+  let c;
+  if (!isStandalone) {
+    try { c = await (await fetch('/api/config')).json(); } catch { isStandalone = true; }
+  }
+  if (isStandalone || !c) {
+    const loc = getLocalConfig();
+    c = {
+      workspaces: (loc.workspaces || []).map(w => ({ source: w.source, label: w.label, domain: w.domain, mock: !w.token || w.token === 'mock', hasToken: !!(w.token && w.token !== 'mock') })),
+      deliver: { telegram: loc.deliver?.telegram || { enabled: false, chatId: '' } },
+      schedule: loc.schedule || { time: '06:30' }
+    };
+  }
+  $('wslist').innerHTML=(c.workspaces||[]).map(w=>`<div class="wsrow"><div><div>${esc(w.label)}</div><div class="wsd">${esc(w.source)}${w.mock?' · demo':(w.hasToken?' · live':'')}</div></div><button class="rm" data-rm="${esc(w.label)}" title="Remove ${esc(w.label)}">✕</button></div>`).join('')||'<div class="hint">No workspaces yet.</div>';
+  document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>removeWs(b.getAttribute('data-rm')));
+  $('tgEnable').checked=!!(c.deliver&&c.deliver.telegram&&c.deliver.telegram.enabled);
+  $('tgChat').value=(c.deliver&&c.deliver.telegram&&c.deliver.telegram.chatId)||'';
+  $('schedTime').value=(c.schedule&&c.schedule.time)||'06:30';
+  if(c.deliver&&c.deliver.telegram&&c.deliver.telegram.hasToken)$('tgToken').placeholder='•••••• (saved — leave blank to keep)';
+}
+
+function msg(t){$('drawerMsg').textContent=t;setTimeout(()=>{if($('drawerMsg').textContent===t)$('drawerMsg').textContent='';},3000);}
+
+async function postConfig(b){
+  if (!isStandalone) {
+    try {
+      const r=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+      if(r.ok) return r.json();
+    } catch { isStandalone = true; }
+  }
+  const cfg = getLocalConfig();
+  if (b.action === 'addWorkspace') {
+    const w = b.workspace || {};
+    cfg.workspaces = (cfg.workspaces || []).filter(x => x.label !== w.label);
+    cfg.workspaces.push({ source: w.source || 'shopify', label: w.label, domain: w.domain || '', token: w.token || 'mock' });
+  } else if (b.action === 'removeWorkspace') {
+    cfg.workspaces = (cfg.workspaces || []).filter(x => x.label !== b.label);
+  } else if (b.action === 'resetWorkspaces') {
+    cfg.workspaces = DEFAULT_WORKSPACES.map(w => ({ ...w }));
+  } else if (b.action === 'setDeliver') {
+    cfg.deliver = { ...cfg.deliver, ...b.deliver };
+  } else if (b.action === 'setSchedule') {
+    cfg.schedule = { ...cfg.schedule, ...b.schedule };
+  }
+  saveLocalConfig(cfg);
+  return cfg;
+}
+
+async function removeWs(label){try{await postConfig({action:'removeWorkspace',label});await loadConfigUI();load();msg('removed '+label);}catch(e){msg(e.message);}}
+$('wsAdd').onclick=async()=>{
+  const w={source:$('wsSource').value,label:$('wsLabel').value.trim(),domain:$('wsDomain').value.trim(),token:$('wsToken').value.trim()||'mock'};
+  if(!w.label){msg('name required');return;}
+  try{
+    await postConfig({action:'addWorkspace',workspace:w});
+    $('wsLabel').value=$('wsDomain').value=$('wsToken').value='';
+    await loadConfigUI();load();
+    msg('added '+w.label);
+  }catch(e){msg(e.message);}
+};
+$('wsReset').onclick=async()=>{
+  await postConfig({action:'resetWorkspaces'});
+  await loadConfigUI();load();
+  msg('restored 6 flagship demo workspaces ✓');
+};
+$('saveDeliver').onclick=async()=>{
+  try{
+    const tg={enabled:$('tgEnable').checked,chatId:$('tgChat').value.trim()};
+    const tok=$('tgToken').value.trim();
+    if(tok)tg.botToken=tok;
+    await postConfig({action:'setDeliver',deliver:{telegram:tg}});
+    await postConfig({action:'setSchedule',schedule:{time:$('schedTime').value.trim()||'06:30'}});
+    msg('saved ✓');
+  }catch(e){msg(e.message);}
+};
+
+/* Morning Brief Preview Modal */
+let modalTab = 'tg';
+function renderBriefModal() {
+  const b = currentBrief || buildBriefClient();
+  const cfg = getLocalConfig();
+  const time = cfg.schedule?.time || '06:30';
+  $('modalSub').textContent = `Scheduled daily at ${time} · ${b.storeCount} workspaces`;
+  const md = renderMarkdownClient(b);
+  if (modalTab === 'tg') {
+    const t = b.totals, cur = t.currency;
+    const bar = sev => sev === 'high' ? '🔴' : sev === 'med' ? '🟡' : '🟢';
+    const high = b.topActions.filter(a => a.severity === 'high');
+    const lines = [
+      `<b>🪺 Nestral — morning brief · ${esc(b.date)}</b>`,
+      ``,
+      `<b>Portfolio today:</b> ${t.ordersToday} orders · ${money(t.revenueToday, cur)}`,
+      `<b>7-day inflow:</b> ${t.orders7d} orders · ${money(t.revenue7d, cur)} (${t.unfulfilled} open)`,
+      ``,
+      `<b>${high.length ? `⚡ Needs you today (${high.length})` : '✅ Nothing urgent today'}</b>`,
+      ...b.topActions.slice(0, 6).map(a => `${bar(a.severity)} <b>${esc(a.store)}</b> — ${esc(a.text)}\n   <i>→ ${esc(a.action)}</i>`),
+      ``,
+      `<b>Per workspace (${b.storeCount})</b>`,
+      ...b.stores.map(s => `${s.ok ? bar(s.items[0]?.severity || 'low') : '🔴'} <b>${esc(s.label)}</b> — ${esc(s.headline)}`)
+    ];
+    $('modalBody').innerHTML = `<div class="tg-box"><div class="tg-hdr"><div class="tg-ava">🪺</div><div><div class="tg-name">Nestral Chief-of-Staff <span class="tg-bot">BOT</span></div></div><div class="tg-time">${esc(time)} AM</div></div><div style="white-space:pre-line">${lines.join('\n')}</div></div>`;
+  } else {
+    $('modalBody').innerHTML = `<pre class="md-pre">${esc(md)}</pre>`;
+  }
+}
+
+$('previewbtn').onclick = () => {
+  renderBriefModal();
+  $('briefModal').classList.add('open');
+};
+$('modalClose').onclick = () => $('briefModal').classList.remove('open');
+$('briefModal').addEventListener('click', e => { if (e.target === $('briefModal')) $('briefModal').classList.remove('open'); });
+$('tabTg').onclick = () => { modalTab = 'tg'; $('tabTg').classList.add('active'); $('tabMd').classList.remove('active'); renderBriefModal(); };
+$('tabMd').onclick = () => { modalTab = 'md'; $('tabMd').classList.add('active'); $('tabTg').classList.remove('active'); renderBriefModal(); };
+$('copyBriefBtn').onclick = async () => {
+  const b = currentBrief || buildBriefClient();
+  try {
+    await navigator.clipboard.writeText(renderMarkdownClient(b));
+    $('copyBriefBtn').textContent = '✓ Copied Markdown!';
+    setTimeout(() => $('copyBriefBtn').textContent = '📋 Copy Brief Markdown', 2000);
+  } catch {}
+};
+
+load();setInterval(load,60000);
+if(location.hash==='#connect')setTimeout(openDrawer,250);
+</script>
+</body>
+</html>

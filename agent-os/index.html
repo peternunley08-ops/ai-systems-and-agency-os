@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent OS — 6-Agent Sequential Pipeline Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a12;
+    --panel: #0e1424;
+    --panel2: #121a2e;
+    --line: #1e2a48;
+    --line-hi: #314470;
+    --tx: #ecf1fb;
+    --muted: #8e9ec2;
+    --faint: #5b6b8f;
+    --accent: #38bdf8;
+    --accent2: #6366f1;
+    --good: #10b981;
+    --warn: #f59e0b;
+    --crit: #ef4444;
+    --purple: #a855f7;
+    --font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background:
+      radial-gradient(900px 480px at 85% -10%, rgba(99,102,241,.18), transparent 60%),
+      radial-gradient(800px 460px at 10% 0%, rgba(56,189,248,.13), transparent 55%),
+      var(--bg);
+    color: var(--tx);
+    min-height: 100vh;
+    padding: 28px 20px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .mono { font-family: var(--mono); }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: grid; place-items: center;
+    font-family: var(--mono); font-weight: 700; font-size: 16px; color: #06101e;
+    box-shadow: 0 10px 25px rgba(56,189,248,.25);
+  }
+  h1 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+  .sub { color: var(--muted); font-size: 13px; margin-top: 3px; }
+  .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  select.scen {
+    background: var(--panel);
+    border: 1px solid var(--line-hi);
+    color: var(--tx);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn {
+    border: 1px solid var(--line-hi);
+    background: var(--panel2);
+    color: var(--tx);
+    border-radius: 10px;
+    padding: 9px 15px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: .18s;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    color: #050914;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(56,189,248,.25);
+  }
+  .btn.primary:hover { filter: brightness(1.08); color: #050914; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* Philosophy banner */
+  .contract {
+    background: rgba(56,189,248,.06);
+    border: 1px solid rgba(56,189,248,.22);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .contract strong { color: var(--tx); }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .cpill {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    color: var(--accent);
+  }
+
+  /* Pipeline Track */
+  .track-wrap {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 24px;
+  }
+  .track-hd {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .track {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(125px, 1fr));
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .node {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: .2s;
+    text-align: left;
+  }
+  .node:hover { border-color: var(--line-hi); transform: translateY(-2px); }
+  .node.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .node.running {
+    border-color: var(--warn);
+    background: rgba(245,158,11,.08);
+    animation: pulse 1.1s infinite alternate;
+  }
+  .node.done { border-color: rgba(16,185,129,.45); }
+  .node.done .st-dot { background: var(--good); box-shadow: 0 0 8px var(--good); }
+  .node.running .st-dot { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+  @keyframes pulse { from { box-shadow: 0 0 0px rgba(245,158,11,.2); } to { box-shadow: 0 0 16px rgba(245,158,11,.4); } }
+  .node-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+  .step-num { font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+  .st-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-hi); }
+  .node-name { font-weight: 700; font-size: 13.5px; margin-bottom: 3px; }
+  .node-role { font-size: 11px; color: var(--muted); line-height: 1.35; min-height: 30px; }
+  .node-meta {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px solid rgba(255,255,255,.05);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--accent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* KPI Strip */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    padding: 14px 16px;
+  }
+  .kpi .lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .kpi .val { font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 5px; }
+  .kpi .subv { font-size: 11.5px; color: var(--faint); margin-top: 3px; }
+
+  /* Main 2-column workspace */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 980px) { .main-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .card-hd {
+    padding: 14px 18px;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-hd h2 { font-size: 14px; font-weight: 700; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
+  .card-bd { padding: 16px 18px; }
+
+  .tabs { display: flex; gap: 6px; }
+  .tab {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: var(--mono);
+    cursor: pointer;
+  }
+  .tab.active {
+    background: rgba(56,189,248,.14);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  pre.code {
+    background: #050811;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.55;
+    color: #d6e2ff;
+    overflow-x: auto;
+    max-height: 460px;
+    overflow-y: auto;
+  }
+
+  /* Quarantine cards */
+  .q-card {
+    background: rgba(245,158,11,.06);
+    border: 1px solid rgba(245,158,11,.3);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .q-card:last-child { margin-bottom: 0; }
+  .q-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .q-badge {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: rgba(245,158,11,.18);
+    color: var(--warn);
+    text-transform: uppercase;
+  }
+  .q-badge.approved { background: rgba(16,185,129,.18); color: var(--good); }
+  .q-badge.rejected { background: rgba(239,68,68,.18); color: var(--crit); }
+  .q-title { font-weight: 700; font-size: 13.5px; }
+  .q-diag { font-size: 12.5px; color: var(--muted); margin-bottom: 8px; line-height: 1.45; }
+  .q-patch {
+    background: #050811;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 11px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: #93c5fd;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+  }
+  .q-actions { display: flex; gap: 8px; }
+  .q-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--line-hi);
+    background: var(--panel2);
+    color: var(--tx);
+    cursor: pointer;
+  }
+  .q-btn.app:hover { border-color: var(--good); color: var(--good); }
+  .q-btn.rej:hover { border-color: var(--crit); color: var(--crit); }
+
+  /* Backlog Table */
+  .b-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: var(--panel2);
+  }
+  .b-score {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--good);
+    background: rgba(16,185,129,.1);
+    border: 1px solid rgba(16,185,129,.3);
+    padding: 4px 8px;
+    border-radius: 7px;
+    min-width: 54px;
+    text-align: center;
+  }
+  .b-dom {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 99px;
+    border: 1px solid var(--line-hi);
+    color: var(--accent);
+  }
+  .b-desc { font-size: 13px; flex: 1; line-height: 1.4; }
+  .b-pri { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; color: var(--muted); }
+  .b-pri.critical, .b-pri.high { color: var(--warn); }
+
+  /* Stage Inspector */
+  .insp-box {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .insp-lbl { font-family: var(--mono); font-size: 10.5px; color: var(--faint); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+  .insp-txt { font-size: 13px; line-height: 1.5; color: var(--tx); }
+  .email-preview {
+    background: #050811;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12.2px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    color: #e2e8f0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">AOS</div>
+      <div>
+        <h1>Agent OS — 6-Agent Sequential Business OS</h1>
+        <div class="sub">Typed <code class="mono">pydantic.BaseModel</code> state · Live Stripe ingest · Quarantined SRE patches · 6:00 AM Executive Digest</div>
+      </div>
+    </div>
+    <div class="controls">
+      <a class="btn" href="../index.html">← Portfolio Hub</a>
+      <select class="scen" id="scenarioSelect">
+        <option value="growth">Scenario A: Healthy Growth Day ($4,820 MRR · 2 Inbound Leads)</option>
+        <option value="degraded">Scenario B: Stripe Webhook Timeout + API Rate-Limit Triage</option>
+      </select>
+      <button class="btn" id="instantBtn">⚡ Instant Complete</button>
+      <button class="btn primary" id="runBtn">▶ Run 6-Agent Sequential Pipeline</button>
+    </div>
+  </header>
+
+  <div class="contract">
+    <div>
+      <strong>Architectural Contract (<code class="mono">agent_os.py</code>):</strong>
+      The model advises, code decides · Authoritative data only · Balanced-bracket JSON extraction · Developer patches quarantined as <code class="mono">pending_review</code>.
+    </div>
+    <div class="pills">
+      <span class="cpill">MODEL = claude-sonnet-4-6</span>
+      <span class="cpill">state_store.json (atomic os.replace)</span>
+      <span class="cpill">Zero auto-deploy</span>
+    </div>
+  </div>
+
+  <!-- 8-Node Sequential Pipeline Track -->
+  <div class="track-wrap">
+    <div class="track-hd">
+      <span id="pipelineStatus">Pipeline Ready — Click "▶ Run 6-Agent Sequential Pipeline" or select any stage below</span>
+      <span id="runIdLabel">run_id: —</span>
+    </div>
+    <div class="track" id="trackGrid"></div>
+  </div>
+
+  <!-- Live Metrics Strip -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="lbl">Net Revenue (Yest)</div>
+      <div class="val" id="kpiNet">$0.00</div>
+      <div class="subv" id="kpiGross">Gross: $0.00 · Refunds: $0.00</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Active Stripe MRR</div>
+      <div class="val" id="kpiMrr">$0.00</div>
+      <div class="subv" id="kpiCust">0 new customers yesterday</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Ranked Backlog</div>
+      <div class="val" id="kpiBacklog">0 tasks</div>
+      <div class="subv" id="kpiTopImpact">Top impact score: —</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Quarantined Patches</div>
+      <div class="val" id="kpiPatches" style="color:var(--warn)">0</div>
+      <div class="subv">Strictly <span class="mono">pending_review</span></div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">LLM Token Usage</div>
+      <div class="val" id="kpiTokens">0 / 0</div>
+      <div class="subv">input_tokens / output_tokens</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- Left Column: Stage Inspector + Ranked Backlog + Quarantine Vault -->
+    <div>
+      <div class="card">
+        <div class="card-hd">
+          <h2 id="inspTitle">🔍 Stage Inspector</h2>
+          <span class="mono" style="font-size:11.5px;color:var(--accent)" id="inspBadge">Select a node</span>
+        </div>
+        <div class="card-bd" id="inspBody"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>📊 Ranked Operational Backlog (<code class="mono">DataAnalyst</code> Position-Index Scored)</h2>
+          <span class="mono" style="font-size:11px;color:var(--muted)" id="backlogMeta">0 tasks</span>
+        </div>
+        <div class="card-bd" id="backlogBody">
+          <div style="color:var(--muted);font-size:13px">Run the pipeline to watch <code class="mono">ceo_agent</code> schedule tasks and <code class="mono">data_analyst_agent</code> rank them by projected revenue impact (0–100).</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <h2>🛡️ Developer Agent Quarantine Vault (<code class="mono">system_integrity</code>)</h2>
+          <span class="mono" style="font-size:11px;color:var(--warn)">Never auto-deployed</span>
+        </div>
+        <div class="card-bd" id="quarantineBody">
+          <div style="color:var(--muted);font-size:13px">When <code class="mono">developer_agent</code> runs, any proposed bug fixes or SRE patches are quarantined here with <code class="mono">status: "pending_review"</code> for human approval.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Live Pydantic GlobalState JSON & 6 AM Executive Email Digest -->
+    <div>
+      <div class="card">
+        <div class="card-hd">
+          <h2>📦 Shared Pydantic <code class="mono">GlobalState</code> &amp; 6 AM Digest</h2>
+          <div class="tabs">
+            <button class="tab active" id="tabStateBtn">state_store.json</button>
+            <button class="tab" id="tabDigestBtn">6 AM Digest Email</button>
+            <button class="tab" id="tabCodeBtn">agent_os.py Guardrails</button>
+          </div>
+        </div>
+        <div class="card-bd" id="rightPaneBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const STAGES = [
+  {
+    id: 'StripeIngest',
+    step: '01 · INGEST',
+    name: 'StripeIngest',
+    role: 'Pulls yesterday charges, refunds, active MRR & new customers',
+    fnName: 'fetch_revenue_metrics() + fetch_new_leads()',
+    prompt: 'N/A (Deterministic Python SDK call with stripe.max_network_retries = 2 and timezone-aware business window)',
+    guardrail: 'Never crashes the run on Stripe outage; normalizes day/week/month/year subscription intervals to monthly MRR; never conflates paying customers with leads.',
+    tokensIn: 0, tokensOut: 0
+  },
+  {
+    id: 'CEO',
+    step: '02 · AGENT 1',
+    name: 'CEO Agent',
+    role: 'Audits yesterday logs & metrics, routes master task schedule',
+    fnName: 'ceo_agent(state: GlobalState)',
+    prompt: 'PREAMBLE + "You are a COO. Audit yesterday, name friction, produce a master task table across content, leads, sales, ops, dev. Return ONLY a JSON array: [{\\"domain\\",\\"description\\",\\"priority\\"}]."',
+    guardrail: 'Normalizes task domains strictly to ALLOWED_DOMAINS = {"content", "leads", "sales", "ops", "dev"} and validates Priority enum.',
+    tokensIn: 412, tokensOut: 285
+  },
+  {
+    id: 'DataAnalyst',
+    step: '03 · AGENT 2',
+    name: 'DataAnalyst',
+    role: 'Scores tasks (0–100) by revenue impact & sorts operational backlog',
+    fnName: 'data_analyst_agent(state: GlobalState)',
+    prompt: 'PREAMBLE + "You are a revenue analyst. Score each task\'s projected_impact (0-100) by expected revenue and urgency. Return ONLY JSON: [{\\"i\\",\\"projected_impact\\"}]."',
+    guardrail: 'Position-index scoring ([{"i", "projected_impact"}]) eliminates UUID hallucination drops; logs coverage warning if model under-returns.',
+    tokensIn: 368, tokensOut: 142
+  },
+  {
+    id: 'CMO',
+    step: '04 · AGENT 3',
+    name: 'CMO Agent',
+    role: 'Builds multi-channel content matrix for top marketing task',
+    fnName: 'cmo_agent(state: GlobalState)',
+    prompt: 'PREAMBLE + "You are a CMO. Build a multi-channel content matrix: hook, script outline, channels, CTA. Return ONLY JSON: [{\\"channel\\",\\"hook\\",\\"script\\",\\"cta\\"}]."',
+    guardrail: 'Case-insensitive domain match against CONTENT_DOMAINS = {"content", "marketing", "cmo"} so a stray capitalization never drops the content task.',
+    tokensIn: 295, tokensOut: 340
+  },
+  {
+    id: 'SalesRep',
+    step: '05 · AGENT 4',
+    name: 'SalesRep (SDR)',
+    role: 'Qualifies real inbound leads (0–100) & drafts follow-ups',
+    fnName: 'sales_agent(state: GlobalState)',
+    prompt: 'PREAMBLE + "You are an SDR. Qualify the day\'s leads, assign a 0-100 score, draft a personalized follow-up. Return ONLY JSON: [{\\"lead\\",\\"score\\",\\"followup\\"}]."',
+    guardrail: 'Only processes verified top-of-funnel leads from fetch_new_leads(); skips cleanly if empty rather than fabricating leads.',
+    tokensIn: 310, tokensOut: 230
+  },
+  {
+    id: 'Researcher',
+    step: '06 · AGENT 5',
+    name: 'Researcher',
+    role: 'Surfaces 3 actionable micro-opportunities from market signals',
+    fnName: 'researcher_agent(state: GlobalState)',
+    prompt: 'PREAMBLE + "You are a market analyst. Surface 3 actionable micro-opportunities from competitor and trend movement. Return ONLY JSON: [{\\"signal\\",\\"opportunity\\",\\"action\\"}]."',
+    guardrail: 'Appends structured intelligence items to state.market_intelligence with balanced-bracket JSON extraction.',
+    tokensIn: 260, tokensOut: 290
+  },
+  {
+    id: 'Developer',
+    step: '07 · AGENT 6',
+    name: 'Developer (SRE)',
+    role: 'Triages yesterday + current run errors & quarantines patches',
+    fnName: 'developer_agent(state: GlobalState)',
+    prompt: 'PREAMBLE + "You are an SRE. Triage error logs, propose patches. Output is QUARANTINED for human review — never auto-deploy. Return ONLY JSON: [{\\"issue\\",\\"diagnosis\\",\\"patch\\",\\"risk\\"}]."',
+    guardrail: 'Enforces f["status"] = "pending_review" in Python code on every returned patch object before committing to state.system_integrity.',
+    tokensIn: 380, tokensOut: 315
+  },
+  {
+    id: 'DigestEmail',
+    step: '08 · DELIVERY',
+    name: '6 AM Digest',
+    role: 'Formats executive summary + stage logs via STARTTLS email',
+    fnName: 'send_digest(state: GlobalState)',
+    prompt: 'N/A (Deterministic MIMEText builder + guarded SMTP STARTTLS delivery)',
+    guardrail: 'Guards all SMTP env vars (SMTP_HOST, SMTP_USER, SMTP_PASS, DIGEST_TO) so missing config logs cleanly without raising KeyError.',
+    tokensIn: 0, tokensOut: 0
+  }
+];
+
+const SCENARIOS = {
+  growth: {
+    run_id: 'a84f92c1',
+    yesterday_logs: [
+      { agent: 'StripeIngest', timestamp: '2026-06-15T13:00:01Z', summary: 'net=$640.0 mrr=$4620.0 new_cust=3', payload: {} },
+      { agent: 'Developer', timestamp: '2026-06-15T13:00:18Z', summary: 'error: CRM webhook timeout after 5000ms on /v1/leads/sync', payload: {} }
+    ],
+    performance_metrics: {
+      gross_revenue: 920.0,
+      net_revenue: 870.0,
+      refunds: 50.0,
+      successful_charges: 11,
+      new_customers: 4,
+      active_mrr: 4820.0
+    },
+    inbound_leads: [
+      { name: 'Elena Rostova — Coastline Dental Group', source: 'Inbound Audit Form', budget: '$3,500', note: 'Looking for bilingual EN/ES patient booking flow' },
+      { name: 'Marcus Vance — Vance Logistics', source: 'Referral', budget: '$6,000', note: 'Wants automated daily dispatch brief across 4 depots' }
+    ],
+    tasks: [
+      { id: 'c9104a2b', domain: 'sales', description: 'Follow up with Coastline Dental Group & Vance Logistics within 2 hours with custom architecture brief', priority: 'critical', projected_impact: 96.0, status: 'pending' },
+      { id: 'f4209b11', domain: 'dev', description: 'Add idempotent retry + 10s timeout backoff on /v1/leads/sync CRM webhook worker', priority: 'high', projected_impact: 88.5, status: 'pending' },
+      { id: 'a3180e44', domain: 'content', description: 'Publish case study breakdown on multi-brand daily executive briefs & zero-dashboard operations', priority: 'high', projected_impact: 81.0, status: 'pending' },
+      { id: 'd7721c09', domain: 'ops', description: 'Audit annual-to-monthly Stripe subscription cohort retention for Q2 renewals', priority: 'medium', projected_impact: 64.0, status: 'pending' }
+    ],
+    content_pipeline: [
+      {
+        channel: 'LinkedIn / Founder Essay',
+        hook: 'Why 5 Shopify admin tabs and 3 analytics dashboards are costing solo operators 90 minutes every morning.',
+        script: '1. Show the 6:30 AM calm brief pattern. 2. Contrast alert fatigue vs ranked severity. 3. Walk through real multi-store anomaly detection.',
+        cta: 'Comment "BRIEF" to test the open-source CLI on your own stores.'
+      },
+      {
+        channel: 'X / Technical Thread',
+        hook: 'We replaced a brittle multi-agent swarm with a 466-line sequential state machine where the LLM advises and Python code decides.',
+        script: '1. Show GlobalState pydantic model. 2. Explain position-index scoring vs UUID hallucination. 3. Show quarantined SRE patches.',
+        cta: 'Link to agent_os.py in bio.'
+      }
+    ],
+    crm_delta: [
+      {
+        lead: 'Elena Rostova — Coastline Dental Group',
+        score: 94,
+        followup: 'Hi Elena — prepared a bilingual EN/ES booking mockup + JSON-LD local schema tailored for Coastline Dental. Available at 11:00 AM PT for a 10-min walkthrough?'
+      },
+      {
+        lead: 'Marcus Vance — Vance Logistics',
+        score: 91,
+        followup: 'Hi Marcus — mapped out a 4-depot daily morning brief connector that flags delayed dispatches at 6:00 AM. Sent the architecture diagram.'
+      }
+    ],
+    market_intelligence: [
+      {
+        signal: 'Solo multi-brand operators consolidating tool stacks',
+        opportunity: 'Position flat-fee multi-workspace brief against $150+/mo per-store analytics tools',
+        action: 'Highlight 6-workspace unified connect drawer in onboarding'
+      },
+      {
+        signal: 'Local service businesses missing bilingual JSON-LD schema',
+        opportunity: 'Bundle automatic EN/ES toggle + LocalBusiness schema in agency handover packages',
+        action: 'Include i18n_seo.py audit score in cold outreach previews'
+      },
+      {
+        signal: 'Rising demand for human-gated SRE remediation',
+        opportunity: 'Showcase pending_review patch quarantine as a core enterprise safety pattern',
+        action: 'Add interactive quarantine approval preview to portfolio docs'
+      }
+    ],
+    system_integrity: [
+      {
+        issue: 'error: CRM webhook timeout after 5000ms on /v1/leads/sync',
+        diagnosis: 'Synchronous webhook fetch lacks exponential backoff and times out during upstream CRM cold starts.',
+        patch: '--- a/crm_sync.py\n+++ b/crm_sync.py\n@@ -14,2 +14,5 @@\n-resp = httpx.post(url, json=payload, timeout=5.0)\n+for attempt in range(3):\n+    try:\n+        resp = httpx.post(url, json=payload, timeout=10.0)\n+        break\n+    except httpx.TimeoutException:\n+        time.sleep(1.5 * (2 ** attempt))',
+        risk: 'low — read/idempotent upsert endpoint',
+        status: 'pending_review'
+      }
+    ]
+  },
+  degraded: {
+    run_id: 'e39c04d8',
+    yesterday_logs: [
+      { agent: 'DataAnalyst', timestamp: '2026-06-15T13:00:09Z', summary: 'error: Anthropic RateLimitError (429) on initial burst; recovered on retry #2', payload: {} }
+    ],
+    performance_metrics: {
+      gross_revenue: 410.0,
+      net_revenue: 410.0,
+      refunds: 0.0,
+      successful_charges: 5,
+      new_customers: 1,
+      active_mrr: 4780.0,
+      _stripe_error: 'APIConnectionError: Stripe subscription pagination timed out on page 2; returning partial MRR snapshot'
+    },
+    inbound_leads: [],
+    tasks: [
+      { id: 'b1120f88', domain: 'dev', description: 'Investigate partial Stripe Subscription pagination timeout & verify webhook fallback cache', priority: 'critical', projected_impact: 95.0, status: 'pending' },
+      { id: 'e9081a32', domain: 'ops', description: 'Reconcile yesterday Stripe payout window against local state_store.json ledger', priority: 'high', projected_impact: 84.0, status: 'pending' },
+      { id: 'c4401d77', domain: 'content', description: 'Draft transparency post on building resilient AI pipelines that degrade gracefully during API outages', priority: 'medium', projected_impact: 72.0, status: 'pending' }
+    ],
+    content_pipeline: [
+      {
+        channel: 'Engineering Blog / Substack',
+        hook: 'What happens at 6:00 AM when Stripe or Anthropic throws a 502? Why your agent pipeline must never crash on ingest.',
+        script: '1. Show fetch_revenue_metrics() broad exception net. 2. Show exponential backoff + jitter in _ask(). 3. Show automatic SRE error triage.',
+        cta: 'Read the full fault-tolerant state machine implementation.'
+      }
+    ],
+    crm_delta: [],
+    market_intelligence: [
+      {
+        signal: 'Production agent teams struggling with silent JSON parse failures',
+        opportunity: 'Open-source the balanced-bracket _extract_json() + retry-once strict-JSON nudge pattern',
+        action: 'Publish benchmark comparing raw json.loads vs _ask_json()'
+      }
+    ],
+    system_integrity: [
+      {
+        issue: 'StripeIngest: APIConnectionError on Subscription.list auto_paging_iter()',
+        diagnosis: 'Transient network reset during Stripe subscription pagination; caught safely by fetch_revenue_metrics() safety net.',
+        patch: '--- a/agent_os.py\n+++ b/agent_os.py\n@@ -159,1 +159,2 @@\n-stripe.max_network_retries = 2\n+stripe.max_network_retries = 4\n+stripe.default_http_client = stripe.http_client.RequestsClient(timeout=20)',
+        risk: 'low — increases idempotent SDK network retry ceiling',
+        status: 'pending_review'
+      },
+      {
+        issue: 'DataAnalyst: RateLimitError (429) on initial burst',
+        diagnosis: 'Concurrent token burst near tier RPM limit; handled by _ask() exponential backoff + jitter.',
+        patch: '--- a/agent_os.py\n+++ b/agent_os.py\n@@ -208,1 +208,1 @@\n-delay = 1.0\n+delay = 1.75  # widen base backoff window between sequential agent stages',
+        risk: 'low — adds ~750ms only on 429 retry paths',
+        status: 'pending_review'
+      }
+    ]
+  }
+};
+
+let currentStepIndex = -1;
+let selectedNodeIndex = 0;
+let rightTab = 'state';
+let isRunning = false;
+let liveState = null;
+let usageTokens = { input_tokens: 0, output_tokens: 0 };
+
+function createEmptyState(scenKey) {
+  const s = SCENARIOS[scenKey];
+  return {
+    run_id: s.run_id,
+    started_at: new Date().toISOString(),
+    yesterday_logs: s.yesterday_logs,
+    performance_metrics: {},
+    inbound_leads: [],
+    daily_master_schedule: [],
+    ranked_operational_backlog: [],
+    content_pipeline: [],
+    crm_delta: [],
+    market_intelligence: [],
+    system_integrity: [],
+    execution_log: []
+  };
+}
+
+function applyStageToState(stageIdx, scenKey) {
+  const s = SCENARIOS[scenKey];
+  const st = STAGES[stageIdx];
+  const now = new Date().toISOString();
+  usageTokens.input_tokens += st.tokensIn;
+  usageTokens.output_tokens += st.tokensOut;
+
+  if (stageIdx === 0) {
+    liveState.performance_metrics = { ...s.performance_metrics };
+    liveState.inbound_leads = s.inbound_leads.map(x => ({ ...x }));
+    const m = liveState.performance_metrics;
+    const errSuffix = m._stripe_error ? ` (error: ${m._stripe_error})` : '';
+    liveState.execution_log.push({
+      agent: 'StripeIngest',
+      timestamp: now,
+      summary: `net=$${m.net_revenue} mrr=$${m.active_mrr} new_cust=${m.new_customers}${errSuffix}`,
+      payload: {}
+    });
+  } else if (stageIdx === 1) {
+    liveState.daily_master_schedule = s.tasks.map(t => ({ ...t, projected_impact: 0.0 }));
+    liveState.execution_log.push({
+      agent: 'CEO',
+      timestamp: now,
+      summary: `Routed ${liveState.daily_master_schedule.length} tasks.`,
+      payload: {}
+    });
+  } else if (stageIdx === 2) {
+    liveState.daily_master_schedule = s.tasks.map(t => ({ ...t }));
+    liveState.ranked_operational_backlog = [...s.tasks].sort((a, b) => b.projected_impact - a.projected_impact);
+    const top = liveState.ranked_operational_backlog[0]?.projected_impact || 0;
+    const n = liveState.ranked_operational_backlog.length;
+    liveState.execution_log.push({
+      agent: 'DataAnalyst',
+      timestamp: now,
+      summary: `Ranked backlog; top impact=${top} (${n}/${n} scored).`,
+      payload: {}
+    });
+  } else if (stageIdx === 3) {
+    liveState.content_pipeline = s.content_pipeline.map(c => ({ ...c }));
+    liveState.execution_log.push({
+      agent: 'CMO',
+      timestamp: now,
+      summary: `Produced ${liveState.content_pipeline.length} content assets.`,
+      payload: {}
+    });
+  } else if (stageIdx === 4) {
+    liveState.crm_delta = s.crm_delta.map(c => ({ ...c }));
+    liveState.execution_log.push({
+      agent: 'SalesRep',
+      timestamp: now,
+      summary: liveState.crm_delta.length ? `Processed ${liveState.crm_delta.length} lead actions.` : 'No inbound leads to process.',
+      payload: {}
+    });
+  } else if (stageIdx === 5) {
+    liveState.market_intelligence = s.market_intelligence.map(m => ({ ...m }));
+    liveState.execution_log.push({
+      agent: 'Researcher',
+      timestamp: now,
+      summary: `Logged ${liveState.market_intelligence.length} opportunities.`,
+      payload: {}
+    });
+  } else if (stageIdx === 6) {
+    liveState.system_integrity = s.system_integrity.map(p => ({ ...p, status: 'pending_review' }));
+    liveState.execution_log.push({
+      agent: 'Developer',
+      timestamp: now,
+      summary: `Quarantined ${liveState.system_integrity.length} patches for review.`,
+      payload: {}
+    });
+  } else if (stageIdx === 7) {
+    liveState.execution_log.push({
+      agent: 'DigestEmail',
+      timestamp: now,
+      summary: `Sent 6:00 AM STARTTLS executive digest (tokens: ${usageTokens.input_tokens} in / ${usageTokens.output_tokens} out).`,
+      payload: {}
+    });
+  }
+}
+
+function buildDigestText() {
+  const m = liveState.performance_metrics || {};
+  const lines = [
+    `Subject: Agent OS digest — ${new Date().toISOString().slice(0, 10)}`,
+    `From: ops@lumensystems.ai`,
+    `To: founder@lumensystems.ai`,
+    `------------------------------------------------------------`,
+    `Agent OS run ${liveState.run_id} — ${liveState.started_at}`,
+    ``,
+    `Net revenue (yest):  $${m.net_revenue ?? 0}`,
+    `Gross / refunds:     $${m.gross_revenue ?? 0} / $${m.refunds ?? 0}`,
+    `Active MRR:          $${m.active_mrr ?? 0}`,
+    `New customers:       ${m.new_customers ?? 0}`,
+    `LLM tokens (in/out): ${usageTokens.input_tokens} / ${usageTokens.output_tokens}`,
+    ``,
+    `Top 3 priorities:`
+  ];
+  for (const t of (liveState.ranked_operational_backlog || []).slice(0, 3)) {
+    lines.push(`  [${String(t.projected_impact).padStart(5, ' ')}] ${t.domain}: ${t.description}`);
+  }
+  lines.push(``, `Stage log:`);
+  for (const l of (liveState.execution_log || [])) {
+    lines.push(`  ${l.agent}: ${l.summary}`);
+  }
+  if (m._stripe_error) {
+    lines.push(``, `! Stripe degraded: ${m._stripe_error}`);
+  }
+  return lines.join('\n');
+}
+
+function renderAll() {
+  $('runIdLabel').textContent = `run_id: ${liveState.run_id}`;
+
+  // Track nodes
+  $('trackGrid').innerHTML = STAGES.map((st, idx) => {
+    const isDone = idx <= currentStepIndex;
+    const isSel = idx === selectedNodeIndex;
+    const logItem = liveState.execution_log.find(l => l.agent === st.id);
+    return `
+      <div class="node ${isDone ? 'done' : ''} ${isSel ? 'selected' : ''}" data-idx="${idx}">
+        <div class="node-top">
+          <span class="step-num">${esc(st.step)}</span>
+          <span class="st-dot"></span>
+        </div>
+        <div class="node-name">${esc(st.name)}</div>
+        <div class="node-role">${esc(st.role)}</div>
+        <div class="node-meta">${logItem ? esc(logItem.summary) : 'Waiting…'}</div>
+      </div>
+    `;
+  }).join('');
+
+  document.querySelectorAll('.node[data-idx]').forEach(el => {
+    el.onclick = () => {
+      selectedNodeIndex = Number(el.getAttribute('data-idx'));
+      renderAll();
+    };
+  });
+
+  // KPIs
+  const m = liveState.performance_metrics || {};
+  $('kpiNet').textContent = `$${(m.net_revenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  $('kpiGross').textContent = `Gross: $${(m.gross_revenue || 0).toFixed(2)} · Refunds: $${(m.refunds || 0).toFixed(2)}`;
+  $('kpiMrr').textContent = `$${(m.active_mrr || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+  $('kpiCust').textContent = `${m.new_customers || 0} new customers yesterday`;
+  const bl = liveState.ranked_operational_backlog || [];
+  $('kpiBacklog').textContent = `${bl.length} tasks`;
+  $('kpiTopImpact').textContent = bl.length ? `Top impact score: ${bl[0].projected_impact}` : 'Top impact score: —';
+  $('kpiPatches').textContent = String((liveState.system_integrity || []).length);
+  $('kpiTokens').textContent = `${usageTokens.input_tokens} / ${usageTokens.output_tokens}`;
+
+  // Stage Inspector
+  const st = STAGES[selectedNodeIndex];
+  const logEntry = liveState.execution_log.find(l => l.agent === st.id);
+  $('inspTitle').innerHTML = `🔍 Stage Inspector · <code class="mono">${esc(st.name)}</code>`;
+  $('inspBadge').textContent = st.fnName;
+  $('inspBody').innerHTML = `
+    <div class="insp-box">
+      <div class="insp-lbl">System Prompt &amp; Authoritative Context Contract</div>
+      <div class="insp-txt mono" style="font-size:12px;color:#bfdbfe">${esc(st.prompt)}</div>
+    </div>
+    <div class="insp-box">
+      <div class="insp-lbl">Deterministic Python Guardrail ("The Model Advises, Code Decides")</div>
+      <div class="insp-txt">${esc(st.guardrail)}</div>
+    </div>
+    <div class="insp-box" style="margin-bottom:0">
+      <div class="insp-lbl">Execution Log Output</div>
+      <div class="insp-txt mono" style="font-size:12px;color:${logEntry ? 'var(--good)' : 'var(--muted)'}">
+        ${logEntry ? `[${esc(logEntry.timestamp)}] ${esc(logEntry.agent)}: ${esc(logEntry.summary)}` : 'Stage has not executed in this run yet.'}
+      </div>
+    </div>
+  `;
+
+  // Ranked Operational Backlog
+  const tasks = liveState.ranked_operational_backlog.length ? liveState.ranked_operational_backlog : liveState.daily_master_schedule;
+  $('backlogMeta').textContent = `${tasks.length} tasks queued`;
+  if (tasks.length) {
+    $('backlogBody').innerHTML = tasks.map((t, i) => `
+      <div class="b-row">
+        <div class="b-score">${t.projected_impact ? t.projected_impact.toFixed(1) : '—'}</div>
+        <span class="b-dom">${esc(t.domain)}</span>
+        <div class="b-desc">${esc(t.description)}</div>
+        <span class="b-pri ${esc(t.priority)}">${esc(t.priority)}</span>
+      </div>
+    `).join('');
+  }
+
+  // Quarantine Vault
+  const patches = liveState.system_integrity || [];
+  if (patches.length) {
+    $('quarantineBody').innerHTML = patches.map((p, idx) => `
+      <div class="q-card">
+        <div class="q-top">
+          <div class="q-title">${esc(p.issue)}</div>
+          <span class="q-badge ${p.status === 'approved' ? 'approved' : p.status === 'rejected' ? 'rejected' : ''}">${esc(p.status)}</span>
+        </div>
+        <div class="q-diag"><strong>Diagnosis:</strong> ${esc(p.diagnosis)} <br><strong>Risk:</strong> ${esc(p.risk)}</div>
+        <div class="q-patch">${esc(p.patch)}</div>
+        <div class="q-actions">
+          <button class="q-btn app" data-qidx="${idx}" data-act="approved">✓ Approve Patch (Human Review)</button>
+          <button class="q-btn rej" data-qidx="${idx}" data-act="rejected">✕ Reject Patch</button>
+        </div>
+      </div>
+    `).join('');
+    document.querySelectorAll('.q-btn[data-qidx]').forEach(btn => {
+      btn.onclick = () => {
+        const i = Number(btn.getAttribute('data-qidx'));
+        const act = btn.getAttribute('data-act');
+        liveState.system_integrity[i].status = act;
+        renderAll();
+      };
+    });
+  }
+
+  // Right Pane
+  if (rightTab === 'state') {
+    $('rightPaneBody').innerHTML = `<pre class="code">${esc(JSON.stringify(liveState, null, 2))}</pre>`;
+  } else if (rightTab === 'digest') {
+    $('rightPaneBody').innerHTML = `<div class="email-preview">${esc(buildDigestText())}</div>`;
+  } else {
+    $('rightPaneBody').innerHTML = `<pre class="code">${esc(`# Key Engineering Fixes in agent_os.py:
+
+1. Position-Index Backlog Scoring (No UUID Hallucination Collapse)
+   items = list(enumerate(state.daily_master_schedule))
+   payload = [{"i": i, "domain": t.domain, "description": t.description,
+               "priority": t.priority.value} for i, t in items]
+   # Model scores by integer index "i"; code sorts deterministically.
+
+2. Balanced-Bracket JSON Extraction + Retry-Once Nudge
+   def _extract_json(text: str) -> str | None:
+       # Scans balanced [...] or {...} respecting string escapes
+   async def _ask_json(system: str, user: str, fallback):
+       # Retries once with strict JSON reminder if initial parse fails
+
+3. Quarantine-Only Developer Agent (Never Auto-Deploys)
+   for f in fixes:
+       if isinstance(f, dict):
+           f["status"] = "pending_review"
+   state.system_integrity.extend(f for f in fixes if isinstance(f, dict))
+
+4. Atomic State Persistence
+   tmp = f"{self.path}.tmp"
+   with open(tmp, "w") as f:
+       f.write(state.model_dump_json(indent=2))
+   os.replace(tmp, self.path)  # atomic; crash mid-write cannot corrupt state`)}</pre>`;
+  }
+}
+
+async function runSequential() {
+  if (isRunning) return;
+  isRunning = true;
+  $('runBtn').disabled = true;
+  $('instantBtn').disabled = true;
+  const scenKey = $('scenarioSelect').value;
+  usageTokens = { input_tokens: 0, output_tokens: 0 };
+  liveState = createEmptyState(scenKey);
+  currentStepIndex = -1;
+  renderAll();
+
+  for (let i = 0; i < STAGES.length; i++) {
+    selectedNodeIndex = i;
+    $('pipelineStatus').textContent = `Running stage ${i + 1} of ${STAGES.length}: ${STAGES[i].name}…`;
+    renderAll();
+    const nodeEl = document.querySelector(`.node[data-idx="${i}"]`);
+    if (nodeEl) nodeEl.classList.add('running');
+    await new Promise(r => setTimeout(r, 420));
+    applyStageToState(i, scenKey);
+    currentStepIndex = i;
+    renderAll();
+  }
+
+  $('pipelineStatus').textContent = `✓ Run ${liveState.run_id} complete — ${STAGES.length} stages committed to state_store.json & 6 AM digest sent`;
+  isRunning = false;
+  $('runBtn').disabled = false;
+  $('instantBtn').disabled = false;
+}
+
+function runInstant() {
+  if (isRunning) return;
+  const scenKey = $('scenarioSelect').value;
+  usageTokens = { input_tokens: 0, output_tokens: 0 };
+  liveState = createEmptyState(scenKey);
+  for (let i = 0; i < STAGES.length; i++) {
+    applyStageToState(i, scenKey);
+  }
+  currentStepIndex = STAGES.length - 1;
+  selectedNodeIndex = 6; // highlight Developer quarantine stage
+  $('pipelineStatus').textContent = `✓ Run ${liveState.run_id} complete — All 8 stages executed`;
+  renderAll();
+}
+
+$('runBtn').onclick = runSequential;
+$('instantBtn').onclick = runInstant;
+$('scenarioSelect').onchange = runInstant;
+
+$('tabStateBtn').onclick = () => { rightTab = 'state'; $('tabStateBtn').classList.add('active'); $('tabDigestBtn').classList.remove('active'); $('tabCodeBtn').classList.remove('active'); renderAll(); };
+$('tabDigestBtn').onclick = () => { rightTab = 'digest'; $('tabDigestBtn').classList.add('active'); $('tabStateBtn').classList.remove('active'); $('tabCodeBtn').classList.remove('active'); renderAll(); };
+$('tabCodeBtn').onclick = () => { rightTab = 'code'; $('tabCodeBtn').classList.add('active'); $('tabStateBtn').classList.remove('active'); $('tabDigestBtn').classList.remove('active'); renderAll(); };
+
+// Initialize with complete run so visitors see rich data immediately, and can re-run step-by-step
+runInstant();
+</script>
+</body>
+</html>

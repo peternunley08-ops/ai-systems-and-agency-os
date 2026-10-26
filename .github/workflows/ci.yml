@@ -1,0 +1,35 @@
+name: CI Verification
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify Nestral CLI (brief & ask)
+        run: |
+          node nestral/index.js brief
+          node nestral/index.js ask "best week?"
+          node nestral/index.js ask "what needs me?"
+
+      - name: Verify SLO Agency OS & Agent OS Python Compilation
+        run: |
+          python3 -m py_compile slo-agency-os/*.py agent-os/agent_os.py
